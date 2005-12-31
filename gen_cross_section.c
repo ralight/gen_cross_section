@@ -2,7 +2,23 @@
 #include <stdlib.h>
 #include <png.h>
 
-#define PNG_DEBUG 3
+#define GEN_CROSS_SECTION_VERSION "0.1"
+
+void printusage()
+{
+	printf("gen_cross_section  version %s\n", GEN_CROSS_SECTION_VERSION);
+	printf("Copyright (C) 2006 by Roger Light\nhttp://www.atchoo.org/chiptools/gen_cross_section/\n\n");
+	printf("gen_cross_section comes with ABSOLUTELY NO WARRANTY.  This is free software, and you\nare welcome to redistribute it under certain conditions.  See the GNU\nGeneral Public Licence for details.\n\n");
+	printf("gen_cross_section is a program for creating a PNG cross section of a chip layout.\nIt needs a text input file with format as described in format.txt.\n\n");
+	printf("Usage: gen_cross_section [-h] [-i input.txt] [-l layers.txt] [-o output.png] [-p palette.txt]\n\n");
+	printf("Options\n");
+	printf(" -h\t\tDisplay this help\n");
+	printf(" -i\t\tInput file (stdin if not specified)\n");
+	printf(" -l\t\tLayer information file (./layers.txt if not specified)\n");
+	printf(" -o\t\tOutput PNG file (stdout if not specified)\n");
+	printf(" -p\t\tPalette file (./palette.txt if not specified)\n");
+	printf("\nSee http://www.atchoo.org/chiptools/gen_cross_section/ for updates.\n");
+}
 
 int contains_layer(char **layercol, char *name)
 {
@@ -16,9 +32,10 @@ int contains_layer(char **layercol, char *name)
 	return 0;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-	FILE *fp=NULL, *iptr=NULL;
+	FILE *outptr=NULL, *inptr=NULL, *layersptr=NULL, *paletteptr=NULL;
+	char *outfile=NULL, *infile=NULL, *layersfile=NULL, *palettefile=NULL;
 	png_color palette[256];
 	int num_palette = 256;
 	png_text text[10];
@@ -32,19 +49,66 @@ int main()
 	int pixwidth = 4;
 	png_uint_32 imagewidth;
 	int layercol, layercount;
+	int i;
 
-
-	iptr = fopen("/home/ral/make_png/cross.txt", "rt");
-	if(!iptr){
-		return -1;
+	for(i=1; i<argc; i++){
+		if(argv[i][0] == '-'){
+			if(strncmp(argv[i], "-h", strlen("-h"))==0){
+				printusage();
+				return 0;
+			}else if(strncmp(argv[i], "-i", strlen("-i"))==0){
+				if(i==argc-1){
+					printf("Error: -i switch given but no input file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					infile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-l", strlen("-l"))==0){
+				if(i==argc-1){
+					printf("Error: -l switch given but no layers file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					layersfile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-o", strlen("-o"))==0){
+				if(i==argc-1){
+					printf("Error: -o switch given but no output file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					outfile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-p", strlen("-p"))==0){
+				if(i==argc-1){
+					printf("Error: -p switch given but no palette file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					palettefile = argv[i+1];
+				}
+			}
+		//}else{
+		// Assume it is a process/config file specified on a previous arg
+		}
 	}
 
-	fgets(istr, 256, iptr); /* Number of pixels across */
+	if(infile){
+		inptr = fopen(infile, "rt");
+		if(!inptr){
+			return -1;
+		}
+	}else{
+		inptr = stdin;
+	}
+
+	fgets(istr, 256, inptr); /* Number of pixels across */
 	sscanf(istr, "%ld", &width);
 	imagewidth = width*pixwidth;
 	layers = (char ***)calloc(width, sizeof(char **));
 	if(!layers){
-		fclose(iptr);
+		fclose(inptr);
 		return -1;
 	}
 	for(m = 0; m<width; m++){
@@ -56,26 +120,32 @@ int main()
 	
 	m = -1;
 	n = 0;
-	while(!feof(iptr)){
-		fgets(istr, 256, iptr);
+	while(!feof(inptr)){
+		fgets(istr, 256, inptr);
 		if(strlen(istr)>1){
 			istr[strlen(istr)-1] = '\0';
 		}
 		if(strcmp(istr, ".")==0){
 			m++;
 			n = 0;
-			//fgets(istr, 256, iptr); /* X Y coords */
+			//fgets(istr, 256, inptr); /* X Y coords */
 		}else{
 			strncpy(layers[m][n], istr, 16);
 			n++;
 		}
 	}
 
-	fclose(iptr);
+	if(inptr != stdin){
+		fclose(inptr);
+	}
 
-	fp = fopen("/home/ral/make_png/test.png", "wb");
-	if(!fp){
-		return -1;
+	if(outfile){
+		outptr = fopen(outfile, "wb");
+		if(!outptr){
+			return -1;
+		}
+	}else{
+		outptr = stdout;
 	}
 
 	png_structp png_ptr = png_create_write_struct(
@@ -85,24 +155,26 @@ int main()
 					NULL,
 					NULL);
 	if(!png_ptr){
-		fclose(fp);
+		if(outptr != stdout){
+			fclose(outptr);
+		}
 		return -1;
 	}
 
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if(!info_ptr){
 		png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
-		fclose(fp);
+		fclose(outptr);
 		return -1;
 	}
 
 	if(setjmp(png_jmpbuf(png_ptr))){
 		png_destroy_write_struct(&png_ptr, &info_ptr);
-		fclose(fp);
+		fclose(outptr);
 		return -1;
 	}
 
-	png_init_io(png_ptr, fp);
+	png_init_io(png_ptr, outptr);
 
 	png_set_IHDR(png_ptr, info_ptr, imagewidth, height, 
 					8,
@@ -340,7 +412,9 @@ int main()
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 
-	fclose(fp);
+	if(outptr != stdout){
+		fclose(outptr);
+	}
 
 	for(m = 0; m<width; m++){
 		for(n = 0; n < 32; n++){
