@@ -8,8 +8,11 @@ void printusage()
 {
 	printf("gen_cross_section  version %s\n", GEN_CROSS_SECTION_VERSION);
 	printf("Copyright (C) 2006 by Roger Light\nhttp://www.atchoo.org/chiptools/gen_cross_section/\n\n");
-	printf("gen_cross_section comes with ABSOLUTELY NO WARRANTY.  This is free software, and you\nare welcome to redistribute it under certain conditions.  See the GNU\nGeneral Public Licence for details.\n\n");
-	printf("gen_cross_section is a program for creating a PNG cross section of a chip layout.\nIt needs a text input file with format as described in format.txt.\n\n");
+	printf("gen_cross_section comes with ABSOLUTELY NO WARRANTY.  This is free software, and you\n");
+	printf("are welcome to redistribute it under certain conditions.  See the GNU\n");
+	printf("General Public Licence for details.\n\n");
+	printf("gen_cross_section is a program for creating a PNG cross section of a chip layout.\n");
+	printf("It needs a text input file with format as described in format.txt.\n\n");
 	printf("Usage: gen_cross_section [-h] [-i input.txt] [-l layers.txt] [-o output.png] [-p palette.txt]\n\n");
 	printf("Options\n");
 	printf(" -h\t\tDisplay this help\n");
@@ -32,12 +35,85 @@ int contains_layer(char **layercol, char *name)
 	return 0;
 }
 
+int make_palette(png_color *palette, int *num_palette)
+{
+	int i;
+
+	if(!palette){
+		return 0;
+	}
+
+	/* Background (White) */
+	palette[0].red = 255;
+	palette[0].green = 255;
+	palette[0].blue = 255;
+
+	/* Black */
+	palette[1].red = 0;
+	palette[1].green = 0;
+	palette[1].blue = 0;
+
+	/* Oxide */
+	palette[2].red = 127;
+	palette[2].green = 127;
+	palette[2].blue = 127;
+
+	/* NTUB */
+	palette[3].red = 0;
+	palette[3].green = 0;
+	palette[3].blue = 255;
+
+	/* NPLUS */
+	palette[4].red = 94;
+	palette[4].green = 32;
+	palette[4].blue = 0;
+
+	/* PPLUS */
+	palette[5].red = 255;
+	palette[5].green = 0;
+	palette[5].blue = 255;
+
+	/* POLY1 */
+	palette[6].red = 255;
+	palette[6].green = 255;
+	palette[6].blue = 0;
+
+	/* MET1 */
+	palette[7].red = 255;
+	palette[7].green = 0;
+	palette[7].blue = 0;
+
+	/* MET2 */
+	palette[8].red = 255;
+	palette[8].green = 175;
+	palette[8].blue = 0;
+
+	/* MET3 */
+	palette[9].red = 0;
+	palette[9].green = 127;
+	palette[9].blue = 127;
+
+	/* MET4 */
+	palette[10].red = 127;
+	palette[10].green = 0;
+	palette[10].blue = 255;
+
+	*num_palette = 11;
+
+	for(i = 11; i < *num_palette; i++){
+		palette[i].red = 0;
+		palette[i].green = i;
+		palette[i].blue = i;
+	}
+	return 1;
+}
+
 int main(int argc, char *argv[])
 {
 	FILE *outptr=NULL, *inptr=NULL, *layersptr=NULL, *paletteptr=NULL;
 	char *outfile=NULL, *infile=NULL, *layersfile=NULL, *palettefile=NULL;
-	png_color palette[256];
-	int num_palette = 256;
+	png_color *palette = NULL;
+	int num_palette;
 	png_text text[10];
 	//int text_num = 10;
 	png_uint_32 width = 640;
@@ -183,68 +259,16 @@ int main(int argc, char *argv[])
 					PNG_COMPRESSION_TYPE_DEFAULT,
 					PNG_FILTER_TYPE_DEFAULT);
 
-	/* Background (White) */
-	palette[0].red = 255;
-	palette[0].green = 255;
-	palette[0].blue = 255;
-
-	/* Black */
-	palette[1].red = 0;
-	palette[1].green = 0;
-	palette[1].blue = 0;
-
-	/* Oxide */
-	palette[2].red = 127;
-	palette[2].green = 127;
-	palette[2].blue = 127;
-
-	/* NTUB */
-	palette[3].red = 0;
-	palette[3].green = 0;
-	palette[3].blue = 255;
-
-	/* NPLUS */
-	palette[4].red = 94;
-	palette[4].green = 32;
-	palette[4].blue = 0;
-
-	/* PPLUS */
-	palette[5].red = 255;
-	palette[5].green = 0;
-	palette[5].blue = 255;
-
-	/* POLY1 */
-	palette[6].red = 255;
-	palette[6].green = 255;
-	palette[6].blue = 0;
-
-	/* MET1 */
-	palette[7].red = 255;
-	palette[7].green = 0;
-	palette[7].blue = 0;
-
-	/* MET2 */
-	palette[8].red = 255;
-	palette[8].green = 175;
-	palette[8].blue = 0;
-
-	/* MET3 */
-	palette[9].red = 0;
-	palette[9].green = 127;
-	palette[9].blue = 127;
-
-	/* MET4 */
-	palette[10].red = 127;
-	palette[10].green = 0;
-	palette[10].blue = 255;
-
-
-	for(j = 11; j < num_palette; j++){
-		palette[j].red = 0;
-		palette[j].green = j;
-		palette[j].blue = j;
+	num_palette = 256;
+	palette = (png_color *)calloc(num_palette, sizeof(png_color));
+	make_palette(palette, &num_palette);
+	if(!palette){
+		// FIXME
+		return -1;
 	}
 	png_set_PLTE(png_ptr, info_ptr, palette, num_palette);
+	free(palette);
+	palette = NULL;
 
 	png_set_filter(png_ptr, 0, PNG_FILTER_NONE);
 	text[0].key = "Software";
