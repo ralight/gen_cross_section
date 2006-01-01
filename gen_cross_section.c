@@ -1,27 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <png.h>
-
-#define GEN_CROSS_SECTION_VERSION "0.1"
-
-void printusage()
-{
-	printf("gen_cross_section  version %s\n", GEN_CROSS_SECTION_VERSION);
-	printf("Copyright (C) 2006 by Roger Light\nhttp://www.atchoo.org/chiptools/gen_cross_section/\n\n");
-	printf("gen_cross_section comes with ABSOLUTELY NO WARRANTY.  This is free software, and you\n");
-	printf("are welcome to redistribute it under certain conditions.  See the GNU\n");
-	printf("General Public Licence for details.\n\n");
-	printf("gen_cross_section is a program for creating a PNG cross section of a chip layout.\n");
-	printf("It needs a text input file with format as described in format.txt.\n\n");
-	printf("Usage: gen_cross_section [-h] [-i input.txt] [-l layers.txt] [-o output.png] [-p palette.txt]\n\n");
-	printf("Options\n");
-	printf(" -h\t\tDisplay this help\n");
-	printf(" -i\t\tInput file (stdin if not specified)\n");
-	printf(" -l\t\tLayer information file (./layers.txt if not specified)\n");
-	printf(" -o\t\tOutput PNG file (stdout if not specified)\n");
-	printf(" -p\t\tPalette file (./palette.txt if not specified)\n");
-	printf("\nSee http://www.atchoo.org/chiptools/gen_cross_section/ for updates.\n");
-}
+#include "gen_cross_section.h"
+#include "palette.h"
+#include "usage.h"
 
 int contains_layer(char **layercol, char *name)
 {
@@ -33,79 +15,6 @@ int contains_layer(char **layercol, char *name)
 		i++;
 	}
 	return 0;
-}
-
-int make_palette(png_color *palette, int *num_palette)
-{
-	int i;
-
-	if(!palette){
-		return 0;
-	}
-
-	/* Background (White) */
-	palette[0].red = 255;
-	palette[0].green = 255;
-	palette[0].blue = 255;
-
-	/* Black */
-	palette[1].red = 0;
-	palette[1].green = 0;
-	palette[1].blue = 0;
-
-	/* Oxide */
-	palette[2].red = 127;
-	palette[2].green = 127;
-	palette[2].blue = 127;
-
-	/* NTUB */
-	palette[3].red = 0;
-	palette[3].green = 0;
-	palette[3].blue = 255;
-
-	/* NPLUS */
-	palette[4].red = 94;
-	palette[4].green = 32;
-	palette[4].blue = 0;
-
-	/* PPLUS */
-	palette[5].red = 255;
-	palette[5].green = 0;
-	palette[5].blue = 255;
-
-	/* POLY1 */
-	palette[6].red = 255;
-	palette[6].green = 255;
-	palette[6].blue = 0;
-
-	/* MET1 */
-	palette[7].red = 255;
-	palette[7].green = 0;
-	palette[7].blue = 0;
-
-	/* MET2 */
-	palette[8].red = 255;
-	palette[8].green = 175;
-	palette[8].blue = 0;
-
-	/* MET3 */
-	palette[9].red = 0;
-	palette[9].green = 127;
-	palette[9].blue = 127;
-
-	/* MET4 */
-	palette[10].red = 127;
-	palette[10].green = 0;
-	palette[10].blue = 255;
-
-	*num_palette = 11;
-
-	for(i = 11; i < *num_palette; i++){
-		palette[i].red = 0;
-		palette[i].green = i;
-		palette[i].blue = i;
-	}
-	return 1;
 }
 
 int main(int argc, char *argv[])
@@ -125,50 +34,8 @@ int main(int argc, char *argv[])
 	int pixwidth = 4;
 	png_uint_32 imagewidth;
 	int layercol, layercount;
-	int i;
 
-	for(i=1; i<argc; i++){
-		if(argv[i][0] == '-'){
-			if(strncmp(argv[i], "-h", strlen("-h"))==0){
-				printusage();
-				return 0;
-			}else if(strncmp(argv[i], "-i", strlen("-i"))==0){
-				if(i==argc-1){
-					printf("Error: -i switch given but no input file specified.\n\n");
-					printusage();
-					return 1;
-				}else{
-					infile = argv[i+1];
-				}
-			}else if(strncmp(argv[i], "-l", strlen("-l"))==0){
-				if(i==argc-1){
-					printf("Error: -l switch given but no layers file specified.\n\n");
-					printusage();
-					return 1;
-				}else{
-					layersfile = argv[i+1];
-				}
-			}else if(strncmp(argv[i], "-o", strlen("-o"))==0){
-				if(i==argc-1){
-					printf("Error: -o switch given but no output file specified.\n\n");
-					printusage();
-					return 1;
-				}else{
-					outfile = argv[i+1];
-				}
-			}else if(strncmp(argv[i], "-p", strlen("-p"))==0){
-				if(i==argc-1){
-					printf("Error: -p switch given but no palette file specified.\n\n");
-					printusage();
-					return 1;
-				}else{
-					palettefile = argv[i+1];
-				}
-			}
-		//}else{
-		// Assume it is a process/config file specified on a previous arg
-		}
-	}
+	process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile);
 
 	if(infile){
 		inptr = fopen(infile, "rt");
