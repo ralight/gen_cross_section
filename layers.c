@@ -17,6 +17,75 @@ int contains_layer(char **cross_sectioncol, char *name)
 	return 0;
 }
 
+int check_rule(layerdef *layer, char **cross_sectioncol)
+{
+	/* This only supports one or two layers in a rule at the mo */
+	int i;
+	char operator = '\0';
+	char last_operator = '\0';
+	int layer_cnt = 0;
+	int operator_cnt = 0;
+	int layer_index = 0;
+	int *results = NULL;
+	int result;
+
+	for(i = 0; i < layer->num_rules; i++){
+		switch((layer->rules[i])[0]){
+			case '&':
+			case '|':
+				operator = layer->rules[i][0];
+			case '!':
+				operator_cnt++;
+				break;
+			default:
+				layer_cnt++;
+				break;
+		}
+	}
+
+	results = (int *)calloc(layer_cnt, sizeof(int));
+	if(!results){
+		fprintf(stderr, "Error: Not enough memory\n");
+		return 0;
+	}
+
+	/* Get results for individual layers, taking ! into account */
+	for(i = 0; i < layer->num_rules; i++){
+		switch(layer->rules[i][0]){
+			case '&':
+			case '|':
+			case '!':
+				last_operator = layer->rules[i][0];
+				break;
+			default:
+				results[layer_index] = contains_layer(cross_sectioncol, layer->rules[i]);
+				if(last_operator == '!'){
+					results[layer_index] = 1 - results[layer_index];
+				}
+				last_operator = '\0';
+				layer_index++;
+				break;
+		}
+	}
+
+	result = 0;
+	if(layer_cnt == 1){
+		result = results[0];
+	}else if(layer_cnt == 2){
+		switch(operator){
+			case '&':
+				result = results[0] && results[1];
+				break;
+			case '|':
+				result = results[0] || results[1];
+				break;
+		}
+	}
+
+	free(results);
+	return result;
+}
+
 void free_cross_section(char ***cross_section, png_uint_32 width)
 {
 	int i, j;
@@ -127,6 +196,9 @@ int load_layers(char *layersfile, layerdef **layers, int *num_layers)
 	}
 	fseek(layersptr, 0, SEEK_SET);
 	while(!feof(layersptr) && fgets(line, 1024, layersptr)){
+		if(strlen(line)>0){
+			line[strlen(line)-1] = '\0'; // remove EOL
+		}
 		current_line++;
 		if(line[0] != '#'){
 			if(strstr(line, "LayerStart")){
@@ -145,11 +217,12 @@ int load_layers(char *layersfile, layerdef **layers, int *num_layers)
 				(*layers)[current_element].ybottom = 0;
 				(*layers)[current_element].ytop = 0;
 				(*layers)[current_element].colour = 0;
-				(*layers)[current_element].rule = NULL;
+				(*layers)[current_element].rules = NULL;
+				(*layers)[current_element].num_rules = 0;
 			}else if(strstr(line, "LayerEnd")){
 				if(!in_layer){
 					fprintf(stderr, "Error: LayerEnd without LayerStart not allowed. LayerStart should appear before line %d of layers file.\n", current_line);
-					free(*layers);
+					free_layers(*layers, *num_layers);
 					fclose(layersptr);
 					return 0;
 				}
@@ -157,7 +230,7 @@ int load_layers(char *layersfile, layerdef **layers, int *num_layers)
 			}else if(strstr(line, "YBottom: ")){
 				if(!in_layer){
 					fprintf(stderr, "Error: YBottom definition outside of LayerStart and LayerEnd on line %d of layers file.\n", current_line);
-					free(*layers);
+					free_layers(*layers, *num_layers);
 					fclose(layersptr);
 					return 0;
 				}else if(got_ybottom){
@@ -170,7 +243,7 @@ int load_layers(char *layersfile, layerdef **layers, int *num_layers)
 			}else if(strstr(line, "YTop: ")){
 				if(!in_layer){
 					fprintf(stderr, "Error: YTop definition outside of LayerStart and LayerEnd on line %d of layers file.\n", current_line);
-					free(*layers);
+					free_layers(*layers, *num_layers);
 					fclose(layersptr);
 					return 0;
 				}else if(got_ytop){
@@ -183,7 +256,7 @@ int load_layers(char *layersfile, layerdef **layers, int *num_layers)
 			}else if(strstr(line, "Colour: ")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Colour definition outside of LayerStart and LayerEnd on line %d of layers file.\n", current_line);
-					free(*layers);
+					free_layers(*layers, *num_layers);
 					fclose(layersptr);
 					return 0;
 				}else if(got_colour){
@@ -193,11 +266,120 @@ int load_layers(char *layersfile, layerdef **layers, int *num_layers)
 					(*layers)[current_element].colour = itemp;
 					got_colour = 1;
 				}
+			}else if(strstr(line, "Rule: ")){
+				if(!in_layer){
+					fprintf(stderr, "Error: Rule definition outside of LayerStart and LayerEnd on line %d of layers file.\n", current_line);
+					free_layers(*layers, *num_layers);
+					fclose(layersptr);
+					return 0;
+				}else if(got_rule){
+					fprintf(stderr, "Warning: Duplicate Rule definition on line %d of layers file. Ignoring new definition.\n", current_line);
+				}else{
+					if(!parse_rules(&line[6], &((*layers)[current_element].rules), &((*layers)[current_element].num_rules))){
+						free_layers(*layers, *num_layers);
+						fclose(layersptr);
+						return 0;
+					}
+					got_rule = 1;
+				}
 			}
 		}
 	}
 
 	fclose(layersptr);
 	return 1;
+}
+
+int parse_rules(char *line, char ***rules, int *num_rules)
+{
+	int i;
+	int elements = 0;
+	int in_element = 0;
+	int *element_size;
+	int element_start, element_index, element_pos;
+
+	for(i = 0; i < strlen(line); i++){
+		if(line[i] == ' '){
+			if(in_element){
+				in_element = 0;
+			}
+		}else{
+			if(!in_element){
+				in_element = 1;
+				elements++;
+			}
+		}
+	}
+
+	(*num_rules) = elements;
+	(*rules) = (char **)calloc(elements, sizeof(char *));
+	if(!(*rules)){
+		fprintf(stderr, "Error: Insufficient memory\n");
+		return 0;
+	}
+
+	element_size = (int *)calloc(elements, sizeof(int));
+	if(!element_size){
+		free(*rules);
+		fprintf(stderr, "Error: Insufficient memory\n");
+		return 0;
+	}
+
+	in_element = 0;
+	element_start = 0;
+	element_index = -1;
+	for(i = 0; i < strlen(line); i++){
+		if(line[i] == ' '){
+			if(in_element){
+				in_element = 0;
+				element_size[element_index] = i - element_start;
+			}
+		}else{
+			if(!in_element){
+				in_element = 1;
+				element_index++;
+			}
+		}
+	}
+	for(i = 0; i < elements; i++){
+		(*rules)[i] = (char *)calloc(element_size[i] + 1, sizeof(char));
+		if(!(*rules)[i]){
+			fprintf(stderr, "Error: Insufficient memory\n");
+			return 0;
+		}
+	}
+	free(element_size);
+
+	in_element = 0;
+	element_index = -1;
+	for(i = 0; i < strlen(line); i++){
+		if(line[i] == ' '){
+			if(in_element){
+				in_element = 0;
+			}
+		}else{
+			if(!in_element){
+				in_element = 1;
+				element_index++;
+				element_pos = 0;
+			}
+			(*rules)[element_index][element_pos] = line[i];
+			element_pos++;
+		}
+	}
+	return 1;
+}
+
+void free_layers(layerdef *layers, int num_layers)
+{
+	int i, j;
+
+	for(i = 0; i < num_layers; i++){
+		for(j = 0; j < layers[i].num_rules; j++){
+			free(layers[i].rules[j]);
+		}
+		free(layers[i].rules);
+	}
+	free(layers);
 }
 

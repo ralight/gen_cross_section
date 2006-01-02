@@ -10,13 +10,14 @@ int main(int argc, char *argv[])
 {
 	char *outfile=NULL, *infile=NULL, *layersfile=NULL, *palettefile=NULL;
 	png_uint_32 width = 0;
-	png_uint_32 height = 640;
+	png_uint_32 height = 0;
 	char ***cross_section = NULL;
 	int pixelwidth = 0;
 	png_uint_32 imagewidth;
 	png_uint_32 maxwidth = 0;
 	layerdef *layers = NULL;
 	int num_layers = 0;
+	int i;
 
 	if(!process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile, &maxwidth)){
 		return 1;
@@ -26,6 +27,9 @@ int main(int argc, char *argv[])
 			free_cross_section(cross_section, width);
 		}
 		return 1;
+	}
+	if(maxwidth == 0){
+		maxwidth = width;
 	}
 	if(width > maxwidth){
 		fprintf(stderr, "Warning: Maximum width specified is less than the cross section width. I can't draw pixels less than one pixel wide, so will use the cross section width as the maximum width.\n");
@@ -42,7 +46,15 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	make_png(outfile, palettefile, cross_section, imagewidth, height, pixelwidth);
+	for(i = 0; i < num_layers; i++){
+		if(layers[i].ytop > height){
+			height = layers[i].ytop;
+		}
+	}
+	height += 10;
+
+	make_png(outfile, palettefile, layers, num_layers, cross_section, imagewidth, height, pixelwidth);
+	free_layers(layers, num_layers);
 	free_cross_section(cross_section, width);
 
 	return 0;

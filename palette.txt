@@ -3,6 +3,10 @@
 # A maximum of 256 entries will be parsed!
 # If you do not specify red, green or blue then they are assumed to be 0.
 
+####################
+# Reserved colours #
+####################
+
 # Background (White)
 # 0
 ColourStart
@@ -11,13 +15,17 @@ Green: 255
 Blue: 255
 ColourEnd
 
-# Black
+# Outline (Black, not yet used)
 # 1
 ColourStart
 Red: 0
 Green: 0
 Blue: 0
 ColourEnd
+
+############################
+# User colours start here! #
+############################
 
 # Oxide
 # 2

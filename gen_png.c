@@ -4,8 +4,9 @@
 #include "gen_png.h"
 #include "palette.h"
 #include "image.h"
+#include "layers.h"
 
-int make_png(char *outfile, char *palettefile, char ***cross_section, png_uint_32 imagewidth, png_uint_32 height, int pixelwidth)
+int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers, char ***cross_section, png_uint_32 imagewidth, png_uint_32 height, int pixelwidth)
 {
 	FILE *outptr = NULL;
 	png_color *palette = NULL;
@@ -82,7 +83,7 @@ int make_png(char *outfile, char *palettefile, char ***cross_section, png_uint_3
 		image[i] = (png_byte *)calloc(imagewidth, sizeof(png_byte));
 	}
 
-	make_image(image, cross_section, imagewidth, height, pixelwidth);
+	make_image(image, layers, num_layers, cross_section, imagewidth, height, pixelwidth);
 
 	for(i = 0; i < height; i++){
 		row_pointers[i] = image[i];

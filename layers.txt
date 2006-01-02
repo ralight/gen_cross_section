@@ -1,105 +1,139 @@
+# This file defines the layer information - position, colour and when it
+# should be displayed.
+# They are drawn in order, starting from the top, so it is probably best to
+# have the low down layers at the top of the list.
+# 
+# Each entry is of the form:
+#
 #LayerStart: Name
 #YBottom: 100
 #YTop: 100
 #Colour: 0
-#Rule: Name
+#Rule: rule
 #LayerEnd
+#
+# Name doesn't do anything at the moment, it is just for making our lives
+# easier.
+# YBottom and YTop control where that layer will be drawn.
+# Colour controls what colour is used - it is the index of the palette from
+# palette.txt.
+# Rule controls the conditions under which the layer will be drawn.
+# It is quite delicate as I'm not very clever :)
+#
+# Rules for Rules
+# ===============
+#
+# The ! (NOT) && (AND) and || (OR) operators are supported.
+# Up to two layers can be used in a rule.
+# There must be a space between the operator and the layer.
+# Brackets () aren't supported.
+#
+# If you need more complicated rules or can help improve the rule handling
+# code (see layers.c check_rule()), please get in touch.
+#
+# Rule Examples
+# =============
+#
+# Rule: A (only draw this layer if A is present)
+# Rule: ! A (only draw this layer if A is not present)
+# Rule: A && B (only draw this layer if both A and B are present)
+# Rule: A || ! B (only draw this layer if A is present or B is not present)
 
 LayerStart: NTUB
 YBottom: 10
 YTop: 200
 Colour: 3
-Rule: NTUB
+Rule: NTUBdrawing
 LayerEnd
 
 LayerStart: FOX
 YBottom: 100
 YTop: 200
 Colour: 2
-Rule: !DIFF
+Rule: ! DIFFdrawing
 LayerEnd
 
 LayerStart: NPLUS
 YBottom: 150
 YTop: 200
 Colour: 4
-Rule: NPLUS && DIFF
+Rule: NPLUSdrawing && DIFFdrawing
 LayerEnd
 
 LayerStart: PPLUS
 YBottom: 150
 YTop: 200
 Colour: 5
-Rule: PPLUS && DIFF
+Rule: PPLUSdrawing && DIFFdrawing
 LayerEnd
 
 LayerStart: IOX1
 YBottom: 200
 YTop: 250
 Colour: 2
-Rule: IOX1
+Rule: IOX1drawing
 LayerEnd
 
 LayerStart: POLY1
 YBottom: 210
 YTop: 220
 Colour: 6
-Rule: POLY1
+Rule: POLY1drawing
 LayerEnd
 
 LayerStart: CONT
 YBottom: 200
 YTop: 250
 Colour: 7
-Rule: CONT
+Rule: CONTdrawing
 LayerEnd
 
 LayerStart: MET1
 YBottom: 250
 YTop: 300
 Colour: 7
-Rule: MET1
+Rule: MET1drawing
 LayerEnd
 
 LayerStart: VIA1
 YBottom: 300
 YTop: 350
 Colour: 8
-Rule: VIA1
+Rule: VIA1drawing
 LayerEnd
 
 LayerStart: MET2
 YBottom: 350
 YTop: 400
 Colour: 8
-Rule: MET2
+Rule: MET2drawing
 LayerEnd
 
 LayerStart: VIA2
 YBottom: 400
 YTop: 450
 Colour: 9
-Rule: VIA2
+Rule: VIA2drawing
 LayerEnd
 
 LayerStart: MET3
 YBottom: 450
 YTop: 500
 Colour: 9
-Rule: MET3
+Rule: MET3drawing
 LayerEnd
 
 LayerStart: VIA3
 YBottom: 500
 YTop: 550
 Colour: 10
-Rule: VIA3
+Rule: VIA3drawing
 LayerEnd
 
 LayerStart: MET4
 YBottom: 550
 YTop: 600
 Colour: 10
-Rule: MET4
+Rule: MET4drawing
 LayerEnd
 
