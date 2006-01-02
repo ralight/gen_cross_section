@@ -30,7 +30,7 @@ void free_cross_section(char ***cross_section, png_uint_32 width)
 	free(cross_section);
 }
 
-int load_cross_section(char *infile, char ****cross_section, png_uint_32 *imagewidth, png_uint_32 *width, png_uint_32 *height, int *pixelwidth)
+int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width, png_uint_32 *height)
 {
 	FILE *inptr = NULL;
 	char istr[256];
@@ -47,7 +47,6 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *imagew
 
 	fgets(istr, 256, inptr); /* Number of pixels across */
 	sscanf(istr, "%ld", width);
-	(*imagewidth) = (*width)*(*pixelwidth);
 	(*cross_section) = (char ***)calloc(*width, sizeof(char **));
 	if(!(*cross_section)){
 		fclose(inptr);

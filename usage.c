@@ -27,7 +27,6 @@ void print_usage()
 int process_args(int argc, char *argv[], char **infile, char **outfile, char **layersfile, char **palettefile, png_uint_32 *maxwidth)
 {
 	int i;
-	char line[1024];
 
 	for(i=1; i<argc; i++){
 		if(argv[i][0] == '-'){
@@ -56,7 +55,7 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 					print_usage();
 					return 0;
 				}else{
-					sscanf(line, "%ld", maxwidth);
+					sscanf(argv[i+1], "%ld", maxwidth);
 				}
 			}else if(strncmp(argv[i], "-o", strlen("-o"))==0){
 				if(i==argc-1){

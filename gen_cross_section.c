@@ -9,22 +9,31 @@
 int main(int argc, char *argv[])
 {
 	char *outfile=NULL, *infile=NULL, *layersfile=NULL, *palettefile=NULL;
-	png_uint_32 width = 640;
+	png_uint_32 width = 0;
 	png_uint_32 height = 640;
 	char ***cross_section = NULL;
-	int pixelwidth = 4;
+	int pixelwidth = 0;
 	png_uint_32 imagewidth;
 	png_uint_32 maxwidth = 0;
 
 	if(!process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile, &maxwidth)){
 		return 1;
 	}
-	if(!load_cross_section(infile, &cross_section, &imagewidth, &width, &height, &pixelwidth)){
+	if(!load_cross_section(infile, &cross_section, &width, &height)){
 		if(cross_section){
 			free_cross_section(cross_section, width);
 		}
 		return 1;
 	}
+	if(width > maxwidth){
+		fprintf(stderr, "Warning: Maximum width specified is less than the cross section width. I can't draw pixels less than one pixel wide, so will use the cross section width as the maximum width.\n");
+		maxwidth = width;
+	}
+	pixelwidth = maxwidth / width; /* find number of pixels per cross section point.
+									  If maxwidth/width is not an integer, our image
+									  will be smaller than the maxwidth and so 
+									  imagewidth is the real size of the image. */
+	imagewidth = pixelwidth * width; 
 	make_png(outfile, palettefile, imagewidth, height, pixelwidth, cross_section);
 	free_cross_section(cross_section, width);
 
