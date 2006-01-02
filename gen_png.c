@@ -4,7 +4,7 @@
 #include "palette.h"
 #include "image.h"
 
-int make_png(char *outfile, png_uint_32 imagewidth, png_uint_32 height, int pixelwidth, char ***layers)
+int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_32 height, int pixelwidth, char ***layers)
 {
 	FILE *outptr = NULL;
 	png_color *palette = NULL;
@@ -57,7 +57,7 @@ int make_png(char *outfile, png_uint_32 imagewidth, png_uint_32 height, int pixe
 
 	num_palette = 256;
 	palette = (png_color *)calloc(num_palette, sizeof(png_color));
-	make_palette(palette, &num_palette);
+	make_palette(palettefile, palette, &num_palette);
 	if(!palette){
 		// FIXME
 		return -1;

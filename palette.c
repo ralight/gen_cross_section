@@ -1,6 +1,6 @@
 #include "palette.h"
 
-int make_palette(png_color *palette, int *num_palette)
+int make_palette(char *palettefile, png_color *palette, int *num_palette)
 {
 	int i;
 
