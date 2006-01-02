@@ -4,18 +4,7 @@
 #include "gen_cross_section.h"
 #include "palette.h"
 #include "usage.h"
-
-int contains_layer(char **layercol, char *name)
-{
-	int i = 0;
-	while(layercol[i] != NULL && strcmp(layercol[i], "")!=0){
-		if(strcmp(layercol[i], name) == 0){
-			return 1;
-		}
-		i++;
-	}
-	return 0;
-}
+#include "image.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,13 +16,11 @@ int main(int argc, char *argv[])
 	//int text_num = 10;
 	png_uint_32 width = 640;
 	png_uint_32 height = 640;
-	png_uint_32 j, k;
+	int i, j;
 	char istr[256];
 	char ***layers;
-	int m, n;
-	int pixwidth = 4;
+	int pixelwidth = 4;
 	png_uint_32 imagewidth;
-	int layercol, layercount;
 
 	process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile);
 
@@ -48,33 +35,33 @@ int main(int argc, char *argv[])
 
 	fgets(istr, 256, inptr); /* Number of pixels across */
 	sscanf(istr, "%ld", &width);
-	imagewidth = width*pixwidth;
+	imagewidth = width*pixelwidth;
 	layers = (char ***)calloc(width, sizeof(char **));
 	if(!layers){
 		fclose(inptr);
 		return -1;
 	}
-	for(m = 0; m<width; m++){
-		layers[m] = (char **)calloc(32, sizeof(char *));
-		for(n = 0; n < 32; n++){
-			layers[m][n] = (char *)calloc(16, sizeof(char));
+	for(i = 0; i < width; i++){
+		layers[i] = (char **)calloc(32, sizeof(char *));
+		for(j = 0; j < 32; j++){
+			layers[i][j] = (char *)calloc(16, sizeof(char));
 		}
 	}
 	
-	m = -1;
-	n = 0;
+	i = -1;
+	j = 0;
 	while(!feof(inptr)){
 		fgets(istr, 256, inptr);
-		if(strlen(istr)>1){
+		if(strlen(istr) > 1){
 			istr[strlen(istr)-1] = '\0';
 		}
 		if(strcmp(istr, ".")==0){
-			m++;
-			n = 0;
+			i++;
+			j = 0;
 			//fgets(istr, 256, inptr); /* X Y coords */
 		}else{
-			strncpy(layers[m][n], istr, 16);
-			n++;
+			strncpy(layers[i][j], istr, 16);
+			j++;
 		}
 	}
 
@@ -93,7 +80,6 @@ int main(int argc, char *argv[])
 
 	png_structp png_ptr = png_create_write_struct(
 					PNG_LIBPNG_VER_STRING,
-					/*(png_voidp)user_error_ptr,*/
 					NULL,
 					NULL,
 					NULL);
@@ -145,160 +131,29 @@ int main(int argc, char *argv[])
 
 	png_write_info(png_ptr, info_ptr);
 
-	png_byte image[height][imagewidth];
+	/* Create image */
+	png_byte **image;
 	png_bytep row_pointers[height];
 
-	/*
-	 * =========================================================
-	 * Make image here
-	 * =========================================================
-	 */
-
-	/*
-	 * White (0)
-	 * Black (1)
-	 *
-	 * ntub  - 10->200  (3)
-	 * fox   - 100->200 (2)
-	 * n+    - 150->200 (4)
-	 * p+    - 150->200 (5)
-	 * gox   - 200->210 (2)
-	 * poly1 - 210->220 (6)
-	 * iox1  - 200->250 (2)
-	 * met1  - 250->300 (7)
-	 * iox2  - 300->350 (2)
-	 * met2  - 350->400 (8)
-	 * iox3  - 400->450 (2)
-	 * met3  - 450->500 (9)
-	 * iox4  - 500->550 (2)
-	 * met4  - 550->600 (10)
-	 */
-
-	/* Clear image to background */
-	for(k = 0; k < height; k++){
-		for(j = 0; j < imagewidth; j++){
-			image[k][j] = 0;
-		}
+	image = (png_byte **)calloc(height, sizeof(png_byte *));
+	for(i = 0; i < height; i++){
+		image[i] = (png_byte *)calloc(imagewidth, sizeof(png_byte));
 	}
 
-	layercol = 0;
-	layercount = 0;
-	for(j = 0; j < imagewidth; j++){
-		/* NTUB */
-		if(contains_layer(layers[layercol], "NTUB")){
-			for(k = height - 200; k < height-10; k++){
-				image[k][j] = 3;
-			}
-		}
-		
-		/* FOX */
-		if(!contains_layer(layers[layercol], "DIFF")){
-			for(k = height - 200; k < height - 100; k++){
-				image[k][j] = 2;
-			}
-		}
-		
-		/* NPLUS */
-		if(contains_layer(layers[layercol], "NPLUS") && contains_layer(layers[layercol], "DIFF")){
-			for(k = height - 200; k < height - 150; k++){
-				image[k][j] = 4;
-			}
-		}
-		
-		/* PPLUS */
-		if(contains_layer(layers[layercol], "PPLUS") && contains_layer(layers[layercol], "DIFF")){
-			for(k = height - 200; k < height - 150; k++){
-				image[k][j] = 5;
-			}
-		}
-		
-		/* IOX1 and GOX */
-		if(contains_layer(layers[layercol], "FIXME")){
-			for(k = height - 250; k < height - 200; k++){
-				image[k][j] = 2;
-			}
-		}
-		
-		/* POLY1 */
-		if(contains_layer(layers[layercol], "POLY1")){
-			for(k = height - 220; k < height - 210; k++){
-				image[k][j] = 6;
-			}
-		}
-		
-		/* CONT */
-		if(contains_layer(layers[layercol], "CONT")){
-			for(k = height - 250; k < height - 200; k++){
-				image[k][j] = 7;
-			}
-		}
-		
-		/* MET1 */
-		if(contains_layer(layers[layercol], "MET1")){
-			for(k = height- 300; k < height - 250; k++){
-				image[k][j] = 7;
-			}
-		}
-		
-		/* VIA1 */
-		if(contains_layer(layers[layercol], "VIA1")){
-			for(k = height - 350; k < height - 300; k++){
-				image[k][j] = 8;
-			}
-		}
-		
-		/* MET2 */
-		if(contains_layer(layers[layercol], "MET2")){
-			for(k = height - 400; k < height - 350; k++){
-				image[k][j] = 8;
-			}
-		}
-		
-		/* VIA2 */
-		if(contains_layer(layers[layercol], "VIA2")){
-			for(k = height - 450; k < height - 400; k++){
-				image[k][j] = 9;
-			}
-		}
-		
-		/* MET3 */
-		if(contains_layer(layers[layercol], "MET3")){
-			for(k = height - 500; k < height - 450; k++){
-				image[k][j] = 9;
-			}
-		}
-		
-		/* VIA3 */
-		if(contains_layer(layers[layercol], "VIA3")){
-			for(k = height - 550; k < height - 500; k++){
-				image[k][j] = 10;
-			}
-		}
-		
-		/* MET4 */
-		if(contains_layer(layers[layercol], "MET4")){
-			for(k = height - 600; k < height - 550; k++){
-				image[k][j] = 10;
-			}
-		}
-		if(layercount == pixwidth){
-			layercol++;
-			layercount = 0;
-		}
-		layercount++;
-	}
+	make_image(image, layers, imagewidth, height, pixelwidth);
 
-	/*
-	 * =========================================================
-	 * End making image
-	 * =========================================================
-	 */
-
-	for(k = 0; k < height; k++){
-		row_pointers[k] = &(image[k][0]);
+	for(i = 0; i < height; i++){
+		row_pointers[i] = image[i];
 	}	
 
 	png_write_image(png_ptr, row_pointers);
+
+	for(i = 0; i < height; i++){
+		free(image[i]);
+	}
+	free(image);
+	/* End creating image */
+
 	png_write_end(png_ptr, info_ptr);
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
@@ -307,11 +162,11 @@ int main(int argc, char *argv[])
 		fclose(outptr);
 	}
 
-	for(m = 0; m<width; m++){
-		for(n = 0; n < 32; n++){
-			free(layers[m][n]);
+	for(i = 0; i < width; i++){
+		for(j = 0; j < 32; j++){
+			free(layers[i][j]);
 		}
-		free(layers[m]);
+		free(layers[i]);
 	}
 	free(layers);
 	return 0;
