@@ -1,8 +1,8 @@
 #ifndef __LAYERS_H__
 #define __LAYERS_H__
 
-int contains_layer(char **layercol, char *name);
-void free_layers(char ***layers, png_uint_32 width);
-int load_layers(char *infile, char ****layers, png_uint_32 *imagewidth, png_uint_32 *width, png_uint_32 *height, int *pixelwidth);
+int contains_layer(char **cross_sectioncol, char *name);
+void free_cross_section(char ***cross_section, png_uint_32 width);
+int load_cross_section(char *infile, char ****cross_section, png_uint_32 *imagewidth, png_uint_32 *width, png_uint_32 *height, int *pixelwidth);
 
 #endif

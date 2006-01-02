@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <png.h>
+
 #include "gen_cross_section.h"
 
 void print_usage()
@@ -16,14 +18,16 @@ void print_usage()
 	printf(" -h\t\tDisplay this help\n");
 	printf(" -i\t\tInput file (stdin if not specified)\n");
 	printf(" -l\t\tLayer information file (./layers.txt if not specified)\n");
+	printf(" -m\t\tMaximum width of the output image. gen_cross_section will scale each point \n\t\tin the input file until the image is as close to this value as possible\n\t\t(integer, defaults to the width of the cross section file)\n");
 	printf(" -o\t\tOutput PNG file (stdout if not specified)\n");
 	printf(" -p\t\tPalette file (./palette.txt if not specified)\n");
 	printf("\nSee http://www.atchoo.org/chiptools/gen_cross_section/ for updates.\n");
 }
 
-int process_args(int argc, char *argv[], char **infile, char **outfile, char **layersfile, char **palettefile)
+int process_args(int argc, char *argv[], char **infile, char **outfile, char **layersfile, char **palettefile, png_uint_32 *maxwidth)
 {
 	int i;
+	char line[1024];
 
 	for(i=1; i<argc; i++){
 		if(argv[i][0] == '-'){
@@ -45,6 +49,14 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 					return 0;
 				}else{
 					*layersfile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-m", strlen("-m"))==0){
+				if(i==argc-1){
+					printf("Error: -m switch given but no width specified.\n\n");
+					print_usage();
+					return 0;
+				}else{
+					sscanf(line, "%ld", maxwidth);
 				}
 			}else if(strncmp(argv[i], "-o", strlen("-o"))==0){
 				if(i==argc-1){

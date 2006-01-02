@@ -5,11 +5,11 @@
 
 #include "layers.h"
 
-int contains_layer(char **layercol, char *name)
+int contains_layer(char **cross_sectioncol, char *name)
 {
 	int i = 0;
-	while(layercol[i] != NULL && strcmp(layercol[i], "")!=0){
-		if(strcmp(layercol[i], name) == 0){
+	while(cross_sectioncol[i] != NULL && strcmp(cross_sectioncol[i], "")!=0){
+		if(strcmp(cross_sectioncol[i], name) == 0){
 			return 1;
 		}
 		i++;
@@ -17,20 +17,20 @@ int contains_layer(char **layercol, char *name)
 	return 0;
 }
 
-void free_layers(char ***layers, png_uint_32 width)
+void free_cross_section(char ***cross_section, png_uint_32 width)
 {
 	int i, j;
 
 	for(i = 0; i < width; i++){
 		for(j = 0; j < 32; j++){
-			free(layers[i][j]);
+			free(cross_section[i][j]);
 		}
-		free(layers[i]);
+		free(cross_section[i]);
 	}
-	free(layers);
+	free(cross_section);
 }
 
-int load_layers(char *infile, char ****layers, png_uint_32 *imagewidth, png_uint_32 *width, png_uint_32 *height, int *pixelwidth)
+int load_cross_section(char *infile, char ****cross_section, png_uint_32 *imagewidth, png_uint_32 *width, png_uint_32 *height, int *pixelwidth)
 {
 	FILE *inptr = NULL;
 	char istr[256];
@@ -48,15 +48,15 @@ int load_layers(char *infile, char ****layers, png_uint_32 *imagewidth, png_uint
 	fgets(istr, 256, inptr); /* Number of pixels across */
 	sscanf(istr, "%ld", width);
 	(*imagewidth) = (*width)*(*pixelwidth);
-	(*layers) = (char ***)calloc(*width, sizeof(char **));
-	if(!(*layers)){
+	(*cross_section) = (char ***)calloc(*width, sizeof(char **));
+	if(!(*cross_section)){
 		fclose(inptr);
 		return 0;
 	}
 	for(i = 0; i < (*width); i++){
-		(*layers)[i] = (char **)calloc(32, sizeof(char *));
+		(*cross_section)[i] = (char **)calloc(32, sizeof(char *));
 		for(j = 0; j < 32; j++){
-			(*layers)[i][j] = (char *)calloc(16, sizeof(char));
+			(*cross_section)[i][j] = (char *)calloc(16, sizeof(char));
 		}
 	}
 	
@@ -72,7 +72,7 @@ int load_layers(char *infile, char ****layers, png_uint_32 *imagewidth, png_uint
 			j = 0;
 			//fgets(istr, 256, inptr); /* X Y coords */
 		}else{
-			strncpy((*layers)[i][j], istr, 16);
+			strncpy((*cross_section)[i][j], istr, 16);
 			j++;
 		}
 	}
