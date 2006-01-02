@@ -116,6 +116,7 @@ int make_palette(char *palettefile, png_color **palette, int *num_palette)
 			}
 		}
 	}
+	fclose(paletteptr);
 	return 1;
 }
 
