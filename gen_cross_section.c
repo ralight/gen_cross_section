@@ -11,12 +11,19 @@ int main(int argc, char *argv[])
 	char *outfile=NULL, *infile=NULL, *layersfile=NULL, *palettefile=NULL;
 	png_uint_32 width = 640;
 	png_uint_32 height = 640;
-	char ***layers;
+	char ***layers = NULL;
 	int pixelwidth = 4;
 	png_uint_32 imagewidth;
 
-	process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile);
-	load_layers(infile, &layers, &imagewidth, &width, &height, &pixelwidth);
+	if(!process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile)){
+		return 1;
+	}
+	if(!load_layers(infile, &layers, &imagewidth, &width, &height, &pixelwidth)){
+		if(layers){
+			free_layers(layers, width);
+		}
+		return 1;
+	}
 	make_png(outfile, palettefile, imagewidth, height, pixelwidth, layers);
 	free_layers(layers, width);
 

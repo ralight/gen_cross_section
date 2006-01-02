@@ -15,7 +15,7 @@ int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_
 	if(outfile){
 		outptr = fopen(outfile, "wb");
 		if(!outptr){
-			return -1;
+			return 0;
 		}
 	}else{
 		outptr = stdout;
@@ -30,20 +30,20 @@ int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_
 		if(outptr != stdout){
 			fclose(outptr);
 		}
-		return -1;
+		return 0;
 	}
 
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if(!info_ptr){
 		png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
 		fclose(outptr);
-		return -1;
+		return 0;
 	}
 
 	if(setjmp(png_jmpbuf(png_ptr))){
 		png_destroy_write_struct(&png_ptr, &info_ptr);
 		fclose(outptr);
-		return -1;
+		return 0;
 	}
 
 	png_init_io(png_ptr, outptr);
@@ -55,10 +55,10 @@ int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_
 					PNG_COMPRESSION_TYPE_DEFAULT,
 					PNG_FILTER_TYPE_DEFAULT);
 
-	make_palette(palettefile, &palette, &num_palette);
-	if(!palette){
-		// FIXME
-		return -1;
+	if(!make_palette(palettefile, &palette, &num_palette) || !palette)
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		fclose(outptr);
+		return 0;
 	}
 	png_set_PLTE(png_ptr, info_ptr, palette, num_palette);
 	free(palette);
@@ -102,6 +102,6 @@ int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_
 	if(outptr != stdout){
 		fclose(outptr);
 	}
-	return 0;
+	return 1;
 }
 

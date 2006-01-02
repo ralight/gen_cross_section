@@ -39,7 +39,7 @@ int load_layers(char *infile, char ****layers, png_uint_32 *imagewidth, png_uint
 	if(infile){
 		inptr = fopen(infile, "rt");
 		if(!inptr){
-			return -1;
+			return 0;
 		}
 	}else{
 		inptr = stdin;
@@ -51,7 +51,7 @@ int load_layers(char *infile, char ****layers, png_uint_32 *imagewidth, png_uint
 	(*layers) = (char ***)calloc(*width, sizeof(char **));
 	if(!(*layers)){
 		fclose(inptr);
-		return -1;
+		return 0;
 	}
 	for(i = 0; i < (*width); i++){
 		(*layers)[i] = (char **)calloc(32, sizeof(char *));
@@ -80,5 +80,5 @@ int load_layers(char *infile, char ****layers, png_uint_32 *imagewidth, png_uint
 	if(inptr != stdin){
 		fclose(inptr);
 	}
-	return 0;
+	return 1;
 }

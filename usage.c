@@ -29,12 +29,12 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 		if(argv[i][0] == '-'){
 			if(strncmp(argv[i], "-h", strlen("-h"))==0){
 				print_usage();
-				return 1;
+				return 0;
 			}else if(strncmp(argv[i], "-i", strlen("-i"))==0){
 				if(i==argc-1){
 					printf("Error: -i switch given but no input file specified.\n\n");
 					print_usage();
-					return 1;
+					return 0;
 				}else{
 					*infile = argv[i+1];
 				}
@@ -42,7 +42,7 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 				if(i==argc-1){
 					printf("Error: -l switch given but no layers file specified.\n\n");
 					print_usage();
-					return 1;
+					return 0;
 				}else{
 					*layersfile = argv[i+1];
 				}
@@ -50,7 +50,7 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 				if(i==argc-1){
 					printf("Error: -o switch given but no output file specified.\n\n");
 					print_usage();
-					return 1;
+					return 0;
 				}else{
 					*outfile = argv[i+1];
 				}
@@ -58,7 +58,7 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 				if(i==argc-1){
 					printf("Error: -p switch given but no palette file specified.\n\n");
 					print_usage();
-					return 1;
+					return 0;
 				}else{
 					*palettefile = argv[i+1];
 				}
@@ -67,5 +67,5 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 		// Assume it is the second part of a previous arg
 		}
 	}
-	return 0;
+	return 1;
 }
