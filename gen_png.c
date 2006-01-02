@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <png.h>
+#include "gen_png.h"
 #include "palette.h"
 #include "image.h"
 
@@ -55,7 +56,7 @@ int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_
 					PNG_COMPRESSION_TYPE_DEFAULT,
 					PNG_FILTER_TYPE_DEFAULT);
 
-	if(!make_palette(palettefile, &palette, &num_palette) || !palette)
+	if(!make_palette(palettefile, &palette, &num_palette) || !palette){
 		png_destroy_write_struct(&png_ptr, &info_ptr);
 		fclose(outptr);
 		return 0;
