@@ -1,0 +1,92 @@
+# This file describes the palette to be used by gen_cross_section
+# The first entry is the background colour.
+# A maximum of 256 entries will be parsed!
+# If you do not specify red, green or blue then they are assumed to be 0.
+
+# Background (White)
+# 0
+ColourStart
+Red: 255
+Green: 255
+Blue: 255
+ColourEnd
+
+# Black
+# 1
+ColourStart
+Red: 0
+Green: 0
+Blue: 0
+ColourEnd
+
+# Oxide
+# 2
+ColourStart
+Red: 127
+Green: 127
+Blue: 127
+ColourEnd
+
+# NTUB
+# 3
+ColourStart
+Red: 0
+Green: 0
+Blue: 255
+ColourEnd
+
+# NPLUS
+# 4
+ColourStart
+Red: 94
+Green: 32
+Blue: 0
+ColourEnd
+
+# PPLUS
+# 5
+ColourStart
+Red: 255
+Green: 0
+Blue: 255
+ColourEnd
+
+# POLY1
+# 6
+ColourStart
+Red: 255
+Green: 255
+Blue: 0
+ColourEnd
+
+# MET1
+# 7
+ColourStart
+Red: 255
+Green: 0
+Blue: 0
+ColourEnd
+
+# MET2
+# 8
+ColourStart
+Red: 255
+Green: 175
+Blue: 0
+ColourEnd
+
+# MET3
+# 9
+ColourStart
+Red: 0
+Green: 127
+Blue: 127
+ColourEnd
+
+# MET4
+# 10
+ColourStart
+Red: 127
+Green: 0
+Blue: 255
+ColourEnd

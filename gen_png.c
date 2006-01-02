@@ -55,9 +55,7 @@ int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_
 					PNG_COMPRESSION_TYPE_DEFAULT,
 					PNG_FILTER_TYPE_DEFAULT);
 
-	num_palette = 256;
-	palette = (png_color *)calloc(num_palette, sizeof(png_color));
-	make_palette(palettefile, palette, &num_palette);
+	make_palette(palettefile, &palette, &num_palette);
 	if(!palette){
 		// FIXME
 		return -1;

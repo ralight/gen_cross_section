@@ -64,7 +64,7 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 				}
 			}
 		//}else{
-		// Assume it is a process/config file specified on a previous arg
+		// Assume it is the second part of a previous arg
 		}
 	}
 	return 0;
