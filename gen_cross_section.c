@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
 	int pixelwidth = 0;
 	png_uint_32 imagewidth;
 	png_uint_32 maxwidth = 0;
+	layerdef *layers = NULL;
+	int num_layers = 0;
 
 	if(!process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile, &maxwidth)){
 		return 1;
@@ -34,7 +36,13 @@ int main(int argc, char *argv[])
 									  will be smaller than the maxwidth and so 
 									  imagewidth is the real size of the image. */
 	imagewidth = pixelwidth * width; 
-	make_png(outfile, palettefile, imagewidth, height, pixelwidth, cross_section);
+
+	if(!load_layers(layersfile, &layers, &num_layers)){
+		free_cross_section(cross_section, width);
+		return 1;
+	}
+
+	make_png(outfile, palettefile, cross_section, imagewidth, height, pixelwidth);
 	free_cross_section(cross_section, width);
 
 	return 0;

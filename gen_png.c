@@ -5,7 +5,7 @@
 #include "palette.h"
 #include "image.h"
 
-int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_32 height, int pixelwidth, char ***layers)
+int make_png(char *outfile, char *palettefile, char ***cross_section, png_uint_32 imagewidth, png_uint_32 height, int pixelwidth)
 {
 	FILE *outptr = NULL;
 	png_color *palette = NULL;
@@ -82,7 +82,7 @@ int make_png(char *outfile, char *palettefile, png_uint_32 imagewidth, png_uint_
 		image[i] = (png_byte *)calloc(imagewidth, sizeof(png_byte));
 	}
 
-	make_image(image, layers, imagewidth, height, pixelwidth);
+	make_image(image, cross_section, imagewidth, height, pixelwidth);
 
 	for(i = 0; i < height; i++){
 		row_pointers[i] = image[i];

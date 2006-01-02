@@ -1,0 +1,105 @@
+#LayerStart: Name
+#YBottom: 100
+#YTop: 100
+#Colour: 0
+#Rule: Name
+#LayerEnd
+
+LayerStart: NTUB
+YBottom: 10
+YTop: 200
+Colour: 3
+Rule: NTUB
+LayerEnd
+
+LayerStart: FOX
+YBottom: 100
+YTop: 200
+Colour: 2
+Rule: !DIFF
+LayerEnd
+
+LayerStart: NPLUS
+YBottom: 150
+YTop: 200
+Colour: 4
+Rule: NPLUS && DIFF
+LayerEnd
+
+LayerStart: PPLUS
+YBottom: 150
+YTop: 200
+Colour: 5
+Rule: PPLUS && DIFF
+LayerEnd
+
+LayerStart: IOX1
+YBottom: 200
+YTop: 250
+Colour: 2
+Rule: IOX1
+LayerEnd
+
+LayerStart: POLY1
+YBottom: 210
+YTop: 220
+Colour: 6
+Rule: POLY1
+LayerEnd
+
+LayerStart: CONT
+YBottom: 200
+YTop: 250
+Colour: 7
+Rule: CONT
+LayerEnd
+
+LayerStart: MET1
+YBottom: 250
+YTop: 300
+Colour: 7
+Rule: MET1
+LayerEnd
+
+LayerStart: VIA1
+YBottom: 300
+YTop: 350
+Colour: 8
+Rule: VIA1
+LayerEnd
+
+LayerStart: MET2
+YBottom: 350
+YTop: 400
+Colour: 8
+Rule: MET2
+LayerEnd
+
+LayerStart: VIA2
+YBottom: 400
+YTop: 450
+Colour: 9
+Rule: VIA2
+LayerEnd
+
+LayerStart: MET3
+YBottom: 450
+YTop: 500
+Colour: 9
+Rule: MET3
+LayerEnd
+
+LayerStart: VIA3
+YBottom: 500
+YTop: 550
+Colour: 10
+Rule: VIA3
+LayerEnd
+
+LayerStart: MET4
+YBottom: 550
+YTop: 600
+Colour: 10
+Rule: MET4
+LayerEnd
+
