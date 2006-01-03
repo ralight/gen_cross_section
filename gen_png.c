@@ -11,7 +11,7 @@ int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers,
 	FILE *outptr = NULL;
 	png_color *palette = NULL;
 	int num_palette;
-	png_text text[10];
+// Removed because it doesn't work	png_text text[10];
 	int i;
 
 	if(outfile){
@@ -67,11 +67,21 @@ int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers,
 	palette = NULL;
 
 	png_set_filter(png_ptr, 0, PNG_FILTER_NONE);
-	text[0].key = "Software";
-	text[0].text = "gds_cross_section";
+
+/* This doesn't seem to work
+	text[0].key = NULL;
+	text[0].text = NULL;
+	text[0].key = (char *)calloc(15, sizeof(char));
+	text[0].text = (char *)calloc(100, sizeof(char));
+
+	strncpy(text[0].key, "Description", 11);
+	strncpy(text[0].text, "Created by gds_cross_section", 28);
+
+	free(text[0].key);
+	free(text[0].text);
 
 	png_set_text(png_ptr, info_ptr, text, 1);
-
+*/
 	png_write_info(png_ptr, info_ptr);
 
 	/* Create image */
