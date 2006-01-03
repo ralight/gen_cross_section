@@ -3,6 +3,11 @@
 
 #include <png.h>
 
+/* What is the largest layer purpose name we have? */
+#define MAX_CROSS_SECTION_NAME 100
+/* What is the maximum number of layers on a single point? */
+#define MAX_CROSS_SECTIONS_PER_POINT 100
+
 typedef struct{
 	int ybottom;
 	int ytop;

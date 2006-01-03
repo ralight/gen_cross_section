@@ -19,21 +19,27 @@ int contains_layer(char **cross_sectioncol, char *name)
 
 int check_rule(layerdef *layer, char **cross_sectioncol)
 {
-	/* This only supports one or two layers in a rule at the mo */
+	/* Kind of a delicate function. Binary operator precedence (&&, ||) is 
+	 * left to right. We currently assume that the rules are valid so something
+	 * like "&& A ! || B" would throw us completely.
+	 */
 	int i;
 	char operator = '\0';
 	char last_operator = '\0';
 	int layer_cnt = 0;
-	int operator_cnt = 0;
-	int layer_index = 0;
+	int operator_cnt = 0, bin_operator_cnt = 0;
+	int layer_index = 0, operator_index = 0;
 	int *results = NULL;
+	char *bin_operators = NULL;
 	int result;
 
+	/* Discover what layers, binary operators and overall operators we have */
 	for(i = 0; i < layer->num_rules; i++){
 		switch((layer->rules[i])[0]){
 			case '&':
 			case '|':
 				operator = layer->rules[i][0];
+				bin_operator_cnt++;
 			case '!':
 				operator_cnt++;
 				break;
@@ -47,6 +53,24 @@ int check_rule(layerdef *layer, char **cross_sectioncol)
 	if(!results){
 		fprintf(stderr, "Error: Not enough memory\n");
 		return 0;
+	}
+
+	bin_operators = (char *)calloc(bin_operator_cnt, sizeof(char));
+	if(!bin_operators){
+		fprintf(stderr, "Error: Insufficient memory\n");
+		free(results);
+		return 0;
+	}
+
+	/* Find binary operators */
+	for(i = 0; i < layer->num_rules; i++){
+		switch(layer->rules[i][0]){
+			case '&':
+			case '|':
+				bin_operators[operator_index] = layer->rules[i][0];
+				operator_index++;
+				break;
+		}
 	}
 
 	/* Get results for individual layers, taking ! into account */
@@ -68,16 +92,17 @@ int check_rule(layerdef *layer, char **cross_sectioncol)
 		}
 	}
 
-	result = 0;
-	if(layer_cnt == 1){
-		result = results[0];
-	}else if(layer_cnt == 2){
-		switch(operator){
+	result = results[0];
+	layer_index = 1;
+	for(i = 0; i < bin_operator_cnt; i++){
+		switch(bin_operators[i]){
 			case '&':
-				result = results[0] && results[1];
+				result = result && results[layer_index];
+				layer_index++;
 				break;
 			case '|':
-				result = results[0] || results[1];
+				result = result || results[layer_index];
+				layer_index++;
 				break;
 		}
 	}
@@ -91,7 +116,7 @@ void free_cross_section(char ***cross_section, png_uint_32 width)
 	int i, j;
 
 	for(i = 0; i < width; i++){
-		for(j = 0; j < 100; j++){
+		for(j = 0; j < MAX_CROSS_SECTIONS_PER_POINT; j++){
 			free(cross_section[i][j]);
 		}
 		free(cross_section[i]);
@@ -122,9 +147,9 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 		return 0;
 	}
 	for(i = 0; i < (*width); i++){
-		(*cross_section)[i] = (char **)calloc(100, sizeof(char *));
-		for(j = 0; j < 100; j++){
-			(*cross_section)[i][j] = (char *)calloc(100, sizeof(char));
+		(*cross_section)[i] = (char **)calloc(MAX_CROSS_SECTIONS_PER_POINT, sizeof(char *));
+		for(j = 0; j < MAX_CROSS_SECTIONS_PER_POINT; j++){
+			(*cross_section)[i][j] = (char *)calloc(MAX_CROSS_SECTION_NAME, sizeof(char));
 		}
 	}
 	
@@ -140,7 +165,7 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 			j = 0;
 			//fgets(istr, 256, inptr); /* X Y coords */
 		}else{
-			strncpy((*cross_section)[i][j], istr, 100);
+			strncpy((*cross_section)[i][j], istr, MAX_CROSS_SECTION_NAME);
 			j++;
 		}
 	}
@@ -295,7 +320,6 @@ int parse_rules(char *line, char ***rules, int *num_rules)
 	int i;
 	int elements = 0;
 	int in_element = 0;
-	int element_start, element_index;
 	char *tok;
 
 	for(i = 0; i < strlen(line); i++){
@@ -319,16 +343,16 @@ int parse_rules(char *line, char ***rules, int *num_rules)
 	}
 
 	tok = strsep(&line, " ");
-	element_index = 0;
+	i = 0;
 	while(tok){
-		(*rules)[element_index] = (char *)calloc(strlen(tok) + 1, sizeof(char));
-		if(!(*rules)[element_index]){
+		(*rules)[i] = (char *)calloc(strlen(tok) + 1, sizeof(char));
+		if(!(*rules)[i]){
 			fprintf(stderr, "Error: Insufficient memory\n");
 			return 0;
 		}
-		strncpy((*rules)[element_index], tok, strlen(tok) + 1);
+		strncpy((*rules)[i], tok, strlen(tok) + 1);
 		tok = strsep(&line, " ");
-		element_index++;
+		i++;
 	}
 
 	return 1;
