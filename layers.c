@@ -102,7 +102,7 @@ void free_cross_section(char ***cross_section, png_uint_32 width)
 int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width, png_uint_32 *height)
 {
 	FILE *inptr = NULL;
-	char istr[256];
+	char istr[1024];
 	int i, j;
 
 	if(infile){
@@ -114,7 +114,7 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 		inptr = stdin;
 	}
 
-	fgets(istr, 256, inptr); /* Number of pixels across */
+	fgets(istr, 1024, inptr); /* Number of pixels across */
 	sscanf(istr, "%ld", width);
 	(*cross_section) = (char ***)calloc(*width, sizeof(char **));
 	if(!(*cross_section)){
@@ -122,17 +122,17 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 		return 0;
 	}
 	for(i = 0; i < (*width); i++){
-		(*cross_section)[i] = (char **)calloc(32, sizeof(char *));
-		for(j = 0; j < 32; j++){
-			(*cross_section)[i][j] = (char *)calloc(16, sizeof(char));
+		(*cross_section)[i] = (char **)calloc(100, sizeof(char *));
+		for(j = 0; j < 100; j++){
+			(*cross_section)[i][j] = (char *)calloc(100, sizeof(char));
 		}
 	}
 	
 	i = -1;
 	j = 0;
 	while(!feof(inptr)){
-		fgets(istr, 256, inptr);
-		if(strlen(istr) > 1){
+		fgets(istr, 1024, inptr);
+		if(strlen(istr) > 0){
 			istr[strlen(istr)-1] = '\0';
 		}
 		if(strcmp(istr, ".")==0){
@@ -140,7 +140,7 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 			j = 0;
 			//fgets(istr, 256, inptr); /* X Y coords */
 		}else{
-			strncpy((*cross_section)[i][j], istr, 16);
+			strncpy((*cross_section)[i][j], istr, 100);
 			j++;
 		}
 	}
@@ -296,7 +296,8 @@ int parse_rules(char *line, char ***rules, int *num_rules)
 	int elements = 0;
 	int in_element = 0;
 	int *element_size;
-	int element_start, element_index, element_pos;
+	int element_start, element_index;
+	char *tok;
 
 	for(i = 0; i < strlen(line); i++){
 		if(line[i] == ' '){
@@ -336,37 +337,26 @@ int parse_rules(char *line, char ***rules, int *num_rules)
 			}
 		}else{
 			if(!in_element){
+				element_start = i;
 				in_element = 1;
 				element_index++;
 			}
 		}
 	}
-	for(i = 0; i < elements; i++){
-		(*rules)[i] = (char *)calloc(element_size[i] + 1, sizeof(char));
-		if(!(*rules)[i]){
+
+	tok = strsep(&line, " ");
+	element_index = 0;
+	while(tok){
+		(*rules)[element_index] = (char *)calloc(strlen(tok) + 1, sizeof(char));
+		if(!(*rules)[element_index]){
 			fprintf(stderr, "Error: Insufficient memory\n");
 			return 0;
 		}
+		strncpy((*rules)[element_index], tok, strlen(tok) + 1);
+		tok = strsep(&line, " ");
+		element_index++;
 	}
-	free(element_size);
 
-	in_element = 0;
-	element_index = -1;
-	for(i = 0; i < strlen(line); i++){
-		if(line[i] == ' '){
-			if(in_element){
-				in_element = 0;
-			}
-		}else{
-			if(!in_element){
-				in_element = 1;
-				element_index++;
-				element_pos = 0;
-			}
-			(*rules)[element_index][element_pos] = line[i];
-			element_pos++;
-		}
-	}
 	return 1;
 }
 

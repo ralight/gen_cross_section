@@ -1,6 +1,7 @@
 # This file describes the palette to be used by gen_cross_section
-# The first entry is the background colour.
-# A maximum of 256 entries will be parsed!
+# The first entry is the background colour, the second is reserved to be the
+# outline colour.
+# If you specify more than 256 colours, it will probably break!
 # If you do not specify red, green or blue then they are assumed to be 0.
 
 ####################

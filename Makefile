@@ -25,8 +25,11 @@ gen_png.o: gen_png.c gen_png.h
 	$(COMPILE) $(INCLUDES) -c gen_png.c -o gen_png.o
 
 install: ${OUT}
-	cp ${OUT} /eee/localvlsi/PackageSetup/bin
+	install -s ${OUT} /usr/local/bin
 
 clean:
 	rm -f $(OUT)
 	rm -f *.o
+
+test: ${OUT}
+	./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt

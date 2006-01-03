@@ -67,11 +67,25 @@ Colour: 5
 Rule: PPLUSdrawing && DIFFdrawing
 LayerEnd
 
-LayerStart: IOX1
+LayerStart: GOX
+YBottom: 200
+YTop: 210
+Colour: 2
+Rule: POLY1drawing && DIFFdrawing
+LayerEnd
+
+LayerStart: CONT_DIFF
 YBottom: 200
 YTop: 250
-Colour: 2
-Rule: IOX1drawing
+Colour: 7
+Rule: CONTdrawing && DIFFdrawing
+LayerEnd
+
+LayerStart: CONT_POLY1
+YBottom: 220
+YTop: 250
+Colour: 7
+Rule: CONTdrawing && POLY1drawing
 LayerEnd
 
 LayerStart: POLY1
@@ -79,13 +93,6 @@ YBottom: 210
 YTop: 220
 Colour: 6
 Rule: POLY1drawing
-LayerEnd
-
-LayerStart: CONT
-YBottom: 200
-YTop: 250
-Colour: 7
-Rule: CONTdrawing
 LayerEnd
 
 LayerStart: MET1
