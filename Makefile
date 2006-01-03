@@ -33,3 +33,6 @@ clean:
 
 test: ${OUT}
 	./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt
+
+memtest: $(OUT)
+	valgrind --leak-check=full --show-reachable=yes ./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt

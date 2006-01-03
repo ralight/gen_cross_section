@@ -91,7 +91,7 @@ void free_cross_section(char ***cross_section, png_uint_32 width)
 	int i, j;
 
 	for(i = 0; i < width; i++){
-		for(j = 0; j < 32; j++){
+		for(j = 0; j < 100; j++){
 			free(cross_section[i][j]);
 		}
 		free(cross_section[i]);
@@ -295,7 +295,6 @@ int parse_rules(char *line, char ***rules, int *num_rules)
 	int i;
 	int elements = 0;
 	int in_element = 0;
-	int *element_size;
 	int element_start, element_index;
 	char *tok;
 
@@ -317,31 +316,6 @@ int parse_rules(char *line, char ***rules, int *num_rules)
 	if(!(*rules)){
 		fprintf(stderr, "Error: Insufficient memory\n");
 		return 0;
-	}
-
-	element_size = (int *)calloc(elements, sizeof(int));
-	if(!element_size){
-		free(*rules);
-		fprintf(stderr, "Error: Insufficient memory\n");
-		return 0;
-	}
-
-	in_element = 0;
-	element_start = 0;
-	element_index = -1;
-	for(i = 0; i < strlen(line); i++){
-		if(line[i] == ' '){
-			if(in_element){
-				in_element = 0;
-				element_size[element_index] = i - element_start;
-			}
-		}else{
-			if(!in_element){
-				element_start = i;
-				in_element = 1;
-				element_index++;
-			}
-		}
 	}
 
 	tok = strsep(&line, " ");

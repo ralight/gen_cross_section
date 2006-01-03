@@ -57,14 +57,14 @@ LayerStart: NPLUS
 YBottom: 150
 YTop: 200
 Colour: 4
-Rule: NPLUSdrawing && DIFFdrawing
+Rule: NPLUSdrawing && DIFFdrawing && ! POLY1drawing
 LayerEnd
 
 LayerStart: PPLUS
 YBottom: 150
 YTop: 200
 Colour: 5
-Rule: PPLUSdrawing && DIFFdrawing
+Rule: PPLUSdrawing && DIFFdrawing && ! POLY1drawing
 LayerEnd
 
 LayerStart: GOX
