@@ -1,0 +1,160 @@
+# This file defines the layer information - position, colour and when it
+# should be displayed.
+# They are drawn in order, starting from the top, so it is probably best to
+# have the low down layers at the top of the list.
+# 
+# Each entry is of the form:
+#
+#LayerStart: Name
+#YBottom: 100
+#YTop: 100
+#Colour: 0
+#Rule: rule
+#LayerEnd
+#
+# Name doesn't do anything at the moment, it is just for making our lives
+# easier.
+# YBottom and YTop control where that layer will be drawn.
+# Colour controls what colour is used - it is the index of the palette from
+# palette.txt.
+# Rule controls the conditions under which the layer will be drawn.
+# It is quite delicate as I'm not very clever :)
+#
+# Rules for Rules
+# ===============
+#
+# The ! (NOT) && (AND) and || (OR) operators are supported.
+# Up to two layers can be used in a rule.
+# There must be a space between the operator and the layer.
+# Brackets () aren't supported.
+#
+# If you need more complicated rules or can help improve the rule handling
+# code (see layers.c check_rule()), please get in touch.
+#
+# Rule Examples
+# =============
+#
+# Rule: A (only draw this layer if A is present)
+# Rule: ! A (only draw this layer if A is not present)
+# Rule: A && B (only draw this layer if both A and B are present)
+# Rule: A || ! B (only draw this layer if A is present or B is not present)
+
+LayerStart: NTUB
+YBottom: 0
+YTop: 300
+Colour: 3
+Rule: NTUBdrawing
+LayerEnd
+
+LayerStart: FOX
+YBottom: 10
+YTop: 300
+Colour: 2
+Rule: ! DIFFdrawing
+LayerEnd
+
+LayerStart: NPLUS
+YBottom: 100
+YTop: 300
+Colour: 4
+Rule: NPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
+LayerEnd
+
+LayerStart: PPLUS
+YBottom: 100
+YTop: 300
+Colour: 5
+Rule: PPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
+LayerEnd
+
+LayerStart: GOX
+YBottom: 300
+YTop: 308
+Colour: 2
+Rule: POLY1drawing && DIFFdrawing
+LayerEnd
+
+LayerStart: CONT_DIFF
+YBottom: 300
+YTop: 400
+Colour: 7
+Rule: CONTdrawing && DIFFdrawing
+LayerEnd
+
+LayerStart: CONT_POLY1
+YBottom: 336
+YTop: 400
+Colour: 7
+Rule: CONTdrawing && POLY1drawing && ! POLY2drawing
+LayerEnd
+
+LayerStart: CONT_POLY2
+YBottom: 360
+YTop: 400
+Colour: 7
+Rule: CONTdrawing && POLY2drawing
+LayerEnd
+
+LayerStart: POLY1
+YBottom: 308
+YTop: 336
+Colour: 6
+Rule: POLY1drawing
+LayerEnd
+
+LayerStart: POLY2
+YBottom: 340
+YTop: 360
+Colour: 11
+Rule: POLY2drawing
+LayerEnd
+
+LayerStart: MET1
+YBottom: 400
+YTop: 466
+Colour: 7
+Rule: MET1drawing
+LayerEnd
+
+LayerStart: VIA1
+YBottom: 466
+YTop: 566
+Colour: 8
+Rule: VIA1drawing
+LayerEnd
+
+LayerStart: MET2
+YBottom: 566
+YTop: 630
+Colour: 8
+Rule: MET2drawing
+LayerEnd
+
+LayerStart: VIA2
+YBottom: 630
+YTop: 730
+Colour: 9
+Rule: VIA2drawing
+LayerEnd
+
+LayerStart: MET3
+YBottom: 730
+YTop: 794
+Colour: 9
+Rule: MET3drawing
+LayerEnd
+
+LayerStart: VIA3
+YBottom: 794
+YTop: 894
+Colour: 10
+Rule: VIA3drawing
+LayerEnd
+
+LayerStart: MET4
+YBottom: 894
+YTop: 986
+Colour: 10
+Rule: MET4drawing
+LayerEnd
+

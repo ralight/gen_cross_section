@@ -99,3 +99,11 @@ Red: 127
 Green: 0
 Blue: 255
 ColourEnd
+
+# POLY2
+# 11
+ColourStart
+Red: 255
+Green: 128
+Blue: 0
+ColourEnd
