@@ -24,17 +24,13 @@
 # ===============
 #
 # The ! (NOT) && (AND) and || (OR) operators are supported.
+# Up to two layers can be used in a rule.
 # There must be a space between the operator and the layer.
 # Brackets () aren't supported.
 #
-# Operator precedence is left to right. So
+# If you need more complicated rules or can help improve the rule handling
+# code (see layers.c check_rule()), please get in touch.
 #
-# A || B && ! C || D && E
-#
-# in "real" boolean is equivalent to
-#
-# (((A || B) && ! C) || D) && E
-# 
 # Rule Examples
 # =============
 #
@@ -42,8 +38,6 @@
 # Rule: ! A (only draw this layer if A is not present)
 # Rule: A && B (only draw this layer if both A and B are present)
 # Rule: A || ! B (only draw this layer if A is present or B is not present)
-# Rule: A && B && ! C (only draw this layer if A is present, B is present and
-# C is not present)
 
 LayerStart: NTUB
 YBottom: 10
@@ -63,14 +57,14 @@ LayerStart: NPLUS
 YBottom: 150
 YTop: 200
 Colour: 4
-Rule: NPLUSdrawing && DIFFdrawing && ! POLY1drawing
+Rule: NPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
 LayerEnd
 
 LayerStart: PPLUS
 YBottom: 150
 YTop: 200
 Colour: 5
-Rule: PPLUSdrawing && DIFFdrawing && ! POLY1drawing
+Rule: PPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
 LayerEnd
 
 LayerStart: GOX
@@ -91,7 +85,14 @@ LayerStart: CONT_POLY1
 YBottom: 220
 YTop: 250
 Colour: 7
-Rule: CONTdrawing && POLY1drawing
+Rule: CONTdrawing && POLY1drawing && ! POLY2drawing
+LayerEnd
+
+LayerStart: CONT_POLY2
+YBottom: 240
+YTop: 250
+Colour: 7
+Rule: CONTdrawing && POLY2drawing
 LayerEnd
 
 LayerStart: POLY1
@@ -99,6 +100,13 @@ YBottom: 210
 YTop: 220
 Colour: 6
 Rule: POLY1drawing
+LayerEnd
+
+LayerStart: POLY2
+YBottom: 230
+YTop: 240
+Colour: 11
+Rule: POLY2drawing
 LayerEnd
 
 LayerStart: MET1
