@@ -41,119 +41,119 @@
 
 LayerStart: NTUB
 YBottom: 0
-YTop: 300
+YTop: 150
 Colour: 3
 Rule: NTUBdrawing
 LayerEnd
 
 LayerStart: FOX
 YBottom: 10
-YTop: 300
+YTop: 150
 Colour: 2
 Rule: ! DIFFdrawing
 LayerEnd
 
 LayerStart: NPLUS
-YBottom: 100
-YTop: 300
+YBottom: 50
+YTop: 150
 Colour: 4
 Rule: NPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
 LayerEnd
 
 LayerStart: PPLUS
-YBottom: 100
-YTop: 300
+YBottom: 50
+YTop: 150
 Colour: 5
 Rule: PPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
 LayerEnd
 
 LayerStart: GOX
-YBottom: 300
-YTop: 308
+YBottom: 150
+YTop: 154
 Colour: 2
 Rule: POLY1drawing && DIFFdrawing
 LayerEnd
 
 LayerStart: CONT_DIFF
-YBottom: 300
-YTop: 400
+YBottom: 150
+YTop: 200
 Colour: 7
 Rule: CONTdrawing && DIFFdrawing
 LayerEnd
 
 LayerStart: CONT_POLY1
-YBottom: 336
-YTop: 400
+YBottom: 168
+YTop: 200
 Colour: 7
 Rule: CONTdrawing && POLY1drawing && ! POLY2drawing
 LayerEnd
 
 LayerStart: CONT_POLY2
-YBottom: 360
-YTop: 400
+YBottom: 180
+YTop: 200
 Colour: 7
 Rule: CONTdrawing && POLY2drawing
 LayerEnd
 
 LayerStart: POLY1
-YBottom: 308
-YTop: 336
+YBottom: 154
+YTop: 168
 Colour: 6
 Rule: POLY1drawing
 LayerEnd
 
 LayerStart: POLY2
-YBottom: 340
-YTop: 360
+YBottom: 170
+YTop: 180
 Colour: 11
 Rule: POLY2drawing
 LayerEnd
 
 LayerStart: MET1
-YBottom: 400
-YTop: 466
+YBottom: 200
+YTop: 233
 Colour: 7
 Rule: MET1drawing
 LayerEnd
 
 LayerStart: VIA1
-YBottom: 466
-YTop: 566
+YBottom: 233
+YTop: 283
 Colour: 8
 Rule: VIA1drawing
 LayerEnd
 
 LayerStart: MET2
-YBottom: 566
-YTop: 630
+YBottom: 283
+YTop: 315
 Colour: 8
 Rule: MET2drawing
 LayerEnd
 
 LayerStart: VIA2
-YBottom: 630
-YTop: 730
+YBottom: 315
+YTop: 365
 Colour: 9
 Rule: VIA2drawing
 LayerEnd
 
 LayerStart: MET3
-YBottom: 730
-YTop: 794
+YBottom: 365
+YTop: 397
 Colour: 9
 Rule: MET3drawing
 LayerEnd
 
 LayerStart: VIA3
-YBottom: 794
-YTop: 894
+YBottom: 397
+YTop: 447
 Colour: 10
 Rule: VIA3drawing
 LayerEnd
 
 LayerStart: MET4
-YBottom: 894
-YTop: 986
+YBottom: 447
+YTop: 493
 Colour: 10
 Rule: MET4drawing
 LayerEnd
