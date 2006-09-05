@@ -32,7 +32,7 @@ clean:
 	rm -f *.o
 
 test: ${OUT}
-	./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt
+	./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt -m 800
 
 memtest: $(OUT)
 	valgrind -v --leak-check=full --show-reachable=yes ./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt
