@@ -2,7 +2,7 @@
 # The first entry is the background colour, the second is reserved to be the
 # outline colour.
 # If you specify more than 256 colours, it will probably break!
-# If you do not specify red, green or blue then they are assumed to be 0.
+# If you do not specify Red, Green or Blue then they are assumed to be 0.
 
 ####################
 # Reserved colours #
@@ -31,9 +31,9 @@ ColourEnd
 # Oxide
 # 2
 ColourStart
-Red: 127
-Green: 127
-Blue: 127
+Red: 192
+Green: 192
+Blue: 192
 ColourEnd
 
 # NTUB
