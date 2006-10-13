@@ -2,6 +2,7 @@ COMPILE=gcc -Wall -ggdb
 INCLUDES=-I/usr/include/libpng12
 LIBS=-lpng12
 OUT=gen_cross_section
+DISTDIR=gen_cross_section_`date +%Y%m%d`
 
 gen_cross_section: gen_cross_section.o usage.o palette.o image.o layers.o gen_png.o
 	$(COMPILE) $(LIBS) gen_cross_section.o usage.o palette.o image.o layers.o gen_png.o -o ${OUT}
@@ -26,6 +27,17 @@ gen_png.o: gen_png.c gen_png.h
 
 install: ${OUT}
 	install -s ${OUT} /usr/local/bin
+
+dist: ${OUT}
+	rm -rf ${DISTDIR}/
+	mkdir ${DISTDIR}/
+	mkdir ${DISTDIR}/cadence/
+	cp *.c *.h ${DISTDIR}/
+	cp COPYING ${DISTDIR}/
+	cp example.txt layers.txt palette.txt readme.txt ${DISTDIR}/
+	cp cadence/*.il ${DISTDIR}/cadence/
+	cp Makefile ${DISTDIR}/
+	tar -jcf ${DISTDIR}.tar.bz2 ${DISTDIR}
 
 clean:
 	rm -f $(OUT)
