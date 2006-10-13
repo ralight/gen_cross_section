@@ -2,7 +2,22 @@
    End users will want to customise genCrossSection(), specifically the paths 
    to the palette and the layer files, as well as the grid and image size.
 */
-/* XyzGetLppsAtPoint() and XyzGetOvlpObj() were both written by Jimka */
+/*
+The functions XyzGetLppsAtPoint and XyzGetOvlpObj, which do most of the work 
+getting the layer information, were written by Jim Newton, part of the Cadence 
+VCAD team. As such, Jim has given me permission to distribute the code but
+that does mean it is not covered by the license in COPYING.txt.
+
+The original thread where Jim provided the functions can be seen at:
+
+http://groups.google.com/group/comp.cad.cadence/browse_thread/thread/503a417a2bc94e33/c12d840b2066e820
+
+The Cadence VCAD (Virtual CAD) team provide, amongst other things, high
+quality SKILL IP to help users get around various shortcomings in the Cadence
+tools. More information on Cadence VCAD can be found at:
+
+http://www.cadence-europe.com/solutions/vpage.cfm
+*/
 
 ;; return a list of layer purpose pairs at the given point
 ;; considering the top level of hierarchy down the specified (depth)
