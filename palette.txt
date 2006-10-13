@@ -16,7 +16,7 @@ Green: 255
 Blue: 255
 ColourEnd
 
-# Outline (Black, not yet used)
+# Outline (Black)
 # 1
 ColourStart
 Red: 0
@@ -36,7 +36,7 @@ Green: 192
 Blue: 192
 ColourEnd
 
-# NTUB
+# NWELL
 # 3
 ColourStart
 Red: 0
@@ -60,7 +60,7 @@ Green: 0
 Blue: 255
 ColourEnd
 
-# POLY1
+# POLY
 # 6
 ColourStart
 Red: 255
@@ -68,7 +68,7 @@ Green: 255
 Blue: 0
 ColourEnd
 
-# MET1
+# M1
 # 7
 ColourStart
 Red: 255
@@ -76,7 +76,7 @@ Green: 0
 Blue: 0
 ColourEnd
 
-# MET2
+# M2
 # 8
 ColourStart
 Red: 255
@@ -84,7 +84,7 @@ Green: 175
 Blue: 0
 ColourEnd
 
-# MET3
+# M3
 # 9
 ColourStart
 Red: 0
@@ -92,18 +92,10 @@ Green: 127
 Blue: 127
 ColourEnd
 
-# MET4
+# M4
 # 10
 ColourStart
 Red: 127
 Green: 0
 Blue: 255
-ColourEnd
-
-# POLY2
-# 11
-ColourStart
-Red: 255
-Green: 128
-Blue: 0
 ColourEnd

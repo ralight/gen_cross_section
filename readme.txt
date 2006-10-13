@@ -7,12 +7,16 @@ Introduction
 gen_cross_section is a tool for creating PNG images of chip layout cross
 sections. Layout tools use a plan view but sometimes it is useful to be able
 to look at the cross section of a particular part of a design.
+It doesn't provide a true cross section because it assumes that all layers
+are perfectly planar.
+
 
 Getting Started
 ---------------
 
 You will need to create/modify two files to match your process - palette.txt
-and layers.txt.
+and layers.txt. Examples of these files are provided for a generic p-sub 4
+metal layer process are included.
 
 Palette.txt defines the colours used to draw the cross section and layers.txt
 defines how these layers are drawn. The examples provided are for a p-sub,
@@ -28,19 +32,23 @@ gen_cross_section -h
 
 for more options.
 
+
 Generating the Input File
 -------------------------
 
 Cadence users should look in the cadence directory for the cross_section.il
 file which contains Skill code for generating the appropriate input file.
-Customise gen_CrossSection() in cross_section.il (the paths, the grid and the
+Customise genCrossSection() in cross_section.il (the paths, the grid and the
 size of the image) and then use:
 
 load("/path/to/cross_section.il")
 genCrossSection()
 
+There's also a skill file for adding a menu to the layout editor.
+
 Users of other software will have to write their own scripts to generate the
 input file. I'd be very happy to receive code for other software.
+
 
 Input File Format
 -----------------
@@ -55,6 +63,7 @@ one to a line. The point is finished with a blank line.
 
 See example.txt for an example cross section file.
 
+
 Contact
 -------
 
@@ -66,4 +75,5 @@ Questions, bug reports, suggestions or request are very welcome.
 Contact me on roger@atchoo.org
 
 Updates to gen_cross_section should be at
-http://www.atchoo.org/chiptools/gen_cross_section/
+http://atchoo.org/tools/gen_cross_section/
+

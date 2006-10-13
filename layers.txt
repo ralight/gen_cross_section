@@ -39,7 +39,7 @@
 # Rule: A && B (only draw this layer if both A and B are present)
 # Rule: A || ! B (only draw this layer if A is present or B is not present)
 
-LayerStart: NTUB
+LayerStart: NWELL
 YBottom: 10
 YTop: 200
 Colour: 3
@@ -57,21 +57,21 @@ LayerStart: NPLUS
 YBottom: 150
 YTop: 200
 Colour: 4
-Rule: NPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
+Rule: NPLUSdrawing && DIFFdrawing && ! POLYdrawing
 LayerEnd
 
 LayerStart: PPLUS
 YBottom: 150
 YTop: 200
 Colour: 5
-Rule: PPLUSdrawing && DIFFdrawing && ! POLY1drawing && ! POLY2drawing
+Rule: PPLUSdrawing && DIFFdrawing && ! POLYdrawing
 LayerEnd
 
 LayerStart: GOX
 YBottom: 200
 YTop: 210
 Colour: 2
-Rule: POLY1drawing && DIFFdrawing
+Rule: POLYdrawing && DIFFdrawing
 LayerEnd
 
 LayerStart: CONT_DIFF
@@ -81,80 +81,66 @@ Colour: 7
 Rule: CONTdrawing && DIFFdrawing
 LayerEnd
 
-LayerStart: CONT_POLY1
+LayerStart: CONT_POLY
 YBottom: 220
 YTop: 250
 Colour: 7
-Rule: CONTdrawing && POLY1drawing && ! POLY2drawing
+Rule: CONTdrawing && POLYdrawing
 LayerEnd
 
-LayerStart: CONT_POLY2
-YBottom: 240
-YTop: 250
-Colour: 7
-Rule: CONTdrawing && POLY2drawing
-LayerEnd
-
-LayerStart: POLY1
+LayerStart: POLY
 YBottom: 210
 YTop: 220
 Colour: 6
-Rule: POLY1drawing
+Rule: POLYdrawing
 LayerEnd
 
-LayerStart: POLY2
-YBottom: 230
-YTop: 240
-Colour: 11
-Rule: POLY2drawing
-LayerEnd
-
-LayerStart: MET1
+LayerStart: M1
 YBottom: 250
 YTop: 300
 Colour: 7
-Rule: MET1drawing
+Rule: M1drawing
 LayerEnd
 
-LayerStart: VIA1
+LayerStart: V1
 YBottom: 300
 YTop: 350
 Colour: 8
-Rule: VIA1drawing
+Rule: V1drawing
 LayerEnd
 
-LayerStart: MET2
+LayerStart: M2
 YBottom: 350
 YTop: 400
 Colour: 8
-Rule: MET2drawing
+Rule: M2drawing
 LayerEnd
 
-LayerStart: VIA2
+LayerStart: V2
 YBottom: 400
 YTop: 450
 Colour: 9
-Rule: VIA2drawing
+Rule: V2drawing
 LayerEnd
 
-LayerStart: MET3
+LayerStart: M3
 YBottom: 450
 YTop: 500
 Colour: 9
-Rule: MET3drawing
+Rule: M3drawing
 LayerEnd
 
-LayerStart: VIA3
+LayerStart: V3
 YBottom: 500
 YTop: 550
 Colour: 10
-Rule: VIA3drawing
+Rule: V3drawing
 LayerEnd
 
-LayerStart: MET4
+LayerStart: M4
 YBottom: 550
 YTop: 600
 Colour: 10
-Rule: MET4drawing
+Rule: M4drawing
 LayerEnd
 
