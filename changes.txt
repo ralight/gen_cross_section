@@ -1,0 +1,5 @@
+20070827
+========
+
+- Tidied up the Cadence skill code so that it passes lint and accepted naming
+  guidelines.

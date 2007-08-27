@@ -7,38 +7,38 @@
  * load("/path/to/cross_section.il")
  * deRegUserTriggers("maskLayout" nil nil 'myLayoutTrigger)
  *
- * You also need to customise the paths in the createOtherMenu()
- * calls to GetCrossSection() to match your own installation.
+ * You also need to customise the paths in the RALCreateOtherMenu()
+ * calls to RALGetCrossSection() to match your own installation.
  */
 
-procedure(createOtherMenu( )
-	itemCrossSect = hiCreateMenuItem(
-		?itemText "Generate Cross Section"
-		?callback "GenCrossSection(\"/path/to/layers.txt\" \"/path/to/palette.txt\" 800)"
-		?name 'itemCrossSect)
-	
-	itemCrossSectScale = hiCreateMenuItem(
-		?itemText "Generate Cross Section (to scale)"
-		?callback "GenCrossSection(\"/path/to/layers_scale.txt\" \"/path/to/palette.txt\" 800)"
-		?name 'itemCrossSectScale)
-	
-	rogerMenu = hiCreatePulldownMenu(
-		'otherMenu
-		"Other"
-		list(itemCrossSect itemCrossSectScale))
+(defun RALCreateOtherMenu ()
+  RALItemCrossSect = (hiCreateMenuItem
+					   ?itemText "Generate Cross Section"
+					   ?callback "RALGenCrossSection(\"/path/to/layers.txt\" \"/path/to/palette.txt\" 800)"
+					   ?name 'itemCrossSect)
+
+  RALItemCrossSectScale = (hiCreateMenuItem
+							?itemText "Generate Cross Section (to scale)"
+							?callback "RALGenCrossSection(\"/path/to/layers_scale.txt\" \"/path/to/palette.txt\" 800)"
+							?name 'itemCrossSectScale)
+
+  RALOtherMenu = (hiCreatePulldownMenu
+				   'RALOtherMenu
+				   "Other"
+				   (list RALItemCrossSect RALItemCrossSectScale))
 )
 
-procedure(otherMenuTrigger( args )
-	createOtherMenu()
-
-	hiInsertBannerMenu(
+(defun RALOtherMenuTrigger (args)
+  RALCreateOtherMenu()
+  
+  (hiInsertBannerMenu
 		hiGetCurrentWindow()
-		otherMenu
-		length(hiGetBannerMenus( hiGetCurrentWindow() ) )
+		RALOtherMenu
+		(length (hiGetBannerMenus hiGetCurrentWindow()))
 		)
-)
+  )
 
-procedure( myLayoutTrigger( l )
-	otherMenuTrigger( l)
-)
+(defun myLayoutTrigger (l)
+  (RALOtherMenuTrigger l)
+  )
 

@@ -1,6 +1,5 @@
 /* Generate an input file for gen_cross_section
-   End users will want to customise genCrossSection(), specifically the paths 
-   to the palette and the layer files, as well as the grid and image size.
+   End users will want to customise RALGenCrossSection(), specifically the grid and image size.
 */
 /*
 The functions XyzGetLppsAtPoint and XyzGetOvlpObj, which do most of the work 
@@ -24,11 +23,11 @@ http://www.cadence-europe.com/solutions/vpage.cfm
 ;; number of levels.
 (defun XyzGetLppsAtPoint (d_cv pt @key (depth (dbGetMaxHierDepth)))
   (let ((hash (makeTable 'lpps nil)))
-    (foreach ovlp_obj (dbGetTrueOverlaps d_cv (list pt pt) t depth)
+	(foreach ovlp_obj (dbGetTrueOverlaps d_cv (list pt pt) t depth)
              (let ((obj (XyzGetOvlpObj ovlp_obj)))
                (when (obj~>isShape)
                  hash[obj~>lpp]=t)))
-    hash->?))
+	hash->?))
 
 ;; ovlp_obj is an element of the return value of dbGetOverlaps
 ;; RETURNS the object at the bottom of the hierachy which is described
@@ -49,78 +48,73 @@ http://www.cadence-europe.com/solutions/vpage.cfm
     (XyzGetOvlpObj (cdr ovlp_obj))))) 
 
 /* line must be orthogonal or diagonal */
-procedure( saveLayersAlongLine( cv line grid filename )
-	let( (layers x dx x1 x2 y dy y1 y2 i count ofile)
-		layers = nil
+(defun RALSaveLayersAlongLine (cv line grid filename)
+  (let (x dx x1 x2 y dy y1 y2 count ofile lpps)
 
-		x1 = car(car(line))
-		y1 = cadr(car(line))
-		y2 = cadr(line) /* just hold this temporarily */
-		x2 = car(y2)
-		y2 = cadr(y2)
+	x1 = (car (car line))
+	y1 = (cadr (car line))
+	y2 = (cadr line) /* just hold this temporarily */
+	x2 = (car y2)
+	y2 = (cadr y2)
 
-		/* As the line is orthogonal or diagonal
-		** it does not matter if count is set by
-		** the x or y axis
-		*/
-		if( x1 == x2
-			then
-				dx = 0 
-			else
-				if( x1 > x2
-					then
-						dx = -grid
-						count = floor((x1 - x2)/grid)
-					else
-						dx = grid
-						count = floor((x2 - x1)/grid)
-						)
-				)
-
-		if( y1 == y2
-			then
-				dy = 0
-			else
-				if( y1 > y2
-					then
-						dy = -grid
-						count = floor((y1 - y2)/grid)
-					else
-						dy = grid
-						count = floor((y2 - y1)/grid)
-						)
-				)
-		x = x1
-		y = y1
-
-		ofile = outfile(filename, "w")
-		fprintf(ofile "%d\n" count)
-		for(i 1 count
-			fprintf(ofile ".\n")
-
-			lpps = XyzGetLppsAtPoint(cv list(x y))
-
-			foreach(lpp lpps
-				fprintf(ofile "%s%s\n" car(lpp) cadr(lpp))
-			)
-			layers = nil
-			fprintf(ofile "\n")
-			x = x + dx
-			y = y + dy
+	/* As the line is orthogonal or diagonal
+	** it does not matter if count is set by
+	** the x or y axis
+	*/
+	(if x1 == x2 then
+	  dx = 0
+	  else
+	  (if x1 > x2 then
+		dx = -grid
+		count = (floor (x1 - x2)/grid)
+		else
+		dx = grid
+		count = (floor (x2 - x1)/grid)
 		)
-		close(ofile)
-	)
-)
+	  )
 
-procedure(genCrossSection()
-	let( (cv line cfile pfile)
-		cv = geGetEditCellView()
-		line = enterLine(?wantPoints 2 ?prompts list("Enter line to generate cross section"))
-		cfile = strcat("/tmp/cross." sprintf(nil "%d" ipcGetPid()))
-		pfile = strcat("/home/" getShellEnvVar("USER") "/cross_section.png")
-		saveLayersAlongLine(cv line 0.05 cfile)
-		system(strcat("gen_cross_section -i " cfile " -o " pfile " -p /path/to/palette.txt -m 800 -l /path/to/layers.txt"))
-		deleteFile(cfile)
-		system(strcat("xv " pfile " &"))
+	(if y1 == y2 then
+	  dy = 0
+	  else
+	  (if y1 > y2 then
+		dy = -grid
+		count = (floor (y1 - y2)/grid)
+		else
+		dy = grid
+		count = (floor (y2 - y1)/grid)
+		)
+	  )
+	
+	x = x1
+	y = y1
+
+	ofile = (outfile filename, "w")
+	(fprintf ofile "%d\n" count)
+	(for i 1 count
+		 (fprintf ofile ".\n")
+
+		 lpps = (XyzGetLppsAtPoint cv (list x y))
+
+		 (foreach lpp lpps
+				  (fprintf ofile "%s%s\n" (car lpp) (cadr lpp)))
+
+		 (fprintf ofile "\n")
+		 x = x + dx
+		 y = y + dy
+		 )
+	(close ofile)
 	)
-)
+  )
+
+(defun RALGenCrossSection (paletteFile layersFile width)
+  (let (cv line cfile pfile)
+	cv = geGetEditCellView()
+	line = (enterLine ?wantPoints 2 ?prompts (list "Enter line to generate cross section"))
+	cfile = (strcat "/tmp/cross." (sprintf nil "%d" ipcGetPid()))
+	pfile = (strcat "/home/" (getShellEnvVar "USER") "/cross_section.png")
+	(RALSaveLayersAlongLine cv line 0.05 cfile)
+	(system (strcat "gen_cross_section -i " cfile " -o " pfile " -p " paletteFile " -m " width " -l " layersFile))
+	(deleteFile cfile)
+	(system (strcat "display " pfile " &"))
+	)
+  )

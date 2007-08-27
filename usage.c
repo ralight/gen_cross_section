@@ -7,7 +7,7 @@
 void print_usage()
 {
 	printf("gen_cross_section  version %s\n", GEN_CROSS_SECTION_VERSION);
-	printf("Copyright (C) 2006 by Roger Light\nhttp://www.atchoo.org/chiptools/gen_cross_section/\n\n");
+	printf("Copyright (C) 2006,2007 by Roger Light\nhttp://atchoo.org/tools/gen_cross_section/\n\n");
 	printf("gen_cross_section comes with ABSOLUTELY NO WARRANTY.  This is free software,\nand you are welcome to redistribute it under certain conditions.  See the GNU\nGeneral Public Licence for details.\n\n");
 	printf("gen_cross_section is a program for creating a PNG cross section of a chip\nlayout. It needs a text input file with format as described in format.txt.\n\n");
 	printf("Usage: gen_cross_section [-h] [-i input.txt] [-l layers.txt] [-m maxwidth] [-o output.png] [-p palette.txt]\n\n");
@@ -18,7 +18,7 @@ void print_usage()
 	printf(" -m\t\tMaximum width of the output image. gen_cross_section will scale\n\t\teach point in the input file until the image is as close to\n\t\tthis value as possible (integer, defaults to the width of the\n\t\tcross section file)\n");
 	printf(" -o\t\tOutput PNG file (stdout if not specified)\n");
 	printf(" -p\t\tPalette file (./palette.txt if not specified)\n");
-	printf("\nSee http://www.atchoo.org/chiptools/gen_cross_section/ for updates.\n");
+	printf("\nSee http://atchoo.org/tools/gen_cross_section/ for updates.\n");
 }
 
 int process_args(int argc, char *argv[], char **infile, char **outfile, char **layersfile, char **palettefile, png_uint_32 *maxwidth)
