@@ -34,7 +34,7 @@ dist: ${OUT}
 	mkdir ${DISTDIR}/cadence/
 	cp *.c *.h ${DISTDIR}/
 	cp COPYING ${DISTDIR}/
-	cp example.txt layers.txt palette.txt readme.txt ${DISTDIR}/
+	cp example.txt layers.txt palette.txt readme.txt changes.txt ${DISTDIR}/
 	cp cadence/*.il ${DISTDIR}/cadence/
 	cp Makefile ${DISTDIR}/
 	tar -jcf ${DISTDIR}.tar.bz2 ${DISTDIR}
