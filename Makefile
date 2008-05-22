@@ -1,34 +1,34 @@
-COMPILE=gcc -Wall -ggdb
-INCLUDES=-I/usr/include/libpng12
+CC=gcc
 LIBS=-lpng12
-OUT=gen_cross_section
-DISTDIR=gen_cross_section_`date +%Y%m%d`
-
+VERSION=20080522
+DISTDIR=gen_cross_section-${VERSION}
+CFLAGS="-Wall -ggdb -I/usr/include/libpng12 -DVERSION=\"${VERSION}\""
+ 
 gen_cross_section: gen_cross_section.o usage.o palette.o image.o layers.o gen_png.o
-	$(COMPILE) $(LIBS) gen_cross_section.o usage.o palette.o image.o layers.o gen_png.o -o ${OUT}
+	$(CC) $(LIBS) $^ -o $@
 
 gen_cross_section.o: gen_cross_section.c
-	$(COMPILE) $(INCLUDES) -c gen_cross_section.c -o gen_cross_section.o
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 usage.o: usage.c usage.h
-	$(COMPILE) $(INCLUDES) -c usage.c -o usage.o
+	$(CC) $(CFLAGS) -c $< -o $@
 
 palette.o: palette.c palette.h
-	$(COMPILE) $(INCLUDES) -c palette.c -o palette.o
+	$(CC) $(CFLAGS) -c $< -o $@
 
 image.o: image.c image.h
-	$(COMPILE) $(INCLUDES) -c image.c -o image.o
+	$(CC) $(CFLAGS) -c $< -o $@
 
 layers.o: layers.c layers.h
-	$(COMPILE) $(INCLUDES) -c layers.c -o layers.o
+	$(CC) $(CFLAGS) -c $< -o $@
 
 gen_png.o: gen_png.c gen_png.h
-	$(COMPILE) $(INCLUDES) -c gen_png.c -o gen_png.o
+	$(CC) $(CFLAGS) -c $< -o $@
 
-install: ${OUT}
-	install -s ${OUT} /usr/local/bin
+install: gen_cross_section
+	install -s $@ /usr/local/bin
 
-dist: ${OUT}
+dist: gen_cross_section
 	rm -rf ${DISTDIR}/
 	mkdir ${DISTDIR}/
 	mkdir ${DISTDIR}/cadence/
@@ -40,11 +40,17 @@ dist: ${OUT}
 	tar -jcf ${DISTDIR}.tar.bz2 ${DISTDIR}
 
 clean:
-	rm -f $(OUT)
+	rm -f gen_cross_section
 	rm -f *.o
 
 test: ${OUT}
-	./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt -m 800
+	./gen_cross_section -i example.txt -o example.png -l ./layers.txt -p ./palette.txt -m 800
 
-memtest: $(OUT)
-	valgrind -v --leak-check=full --show-reachable=yes ./$(OUT) -i example.txt -o example.png -l ./layers.txt -p ./palette.txt
+memtest: gen_cross_section
+	valgrind -v --leak-check=full --show-reachable=yes ./gen_cross_section -i example.txt -o example.png -l ./layers.txt -p ./palette.txt
+
+sign : dist
+	gpg --detach-sign -a gen_cross_section-${VERSION}.tar.bz2
+
+copy : sign
+	scp gen_cross_section-${VERSION}.tar.bz2 gen_cross_section-${VERSION}.tar.bz2.asc atchoo:atchoo.org/tools/gen_cross_section/files/
