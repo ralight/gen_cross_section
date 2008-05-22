@@ -39,13 +39,11 @@ Generating the Input File
 Cadence users should look in the cadence directory for the cross_section.il
 file which contains Skill code for generating the appropriate input file.
 
-Customise genCrossSection() in cross_section.il (the paths, the grid and the
+Customise RALCreateOtherMenu() in layout_menu.il (the paths, the grid and the
 size of the image) and then use:
 
 load("/path/to/cross_section.il")
-genCrossSection()
-
-There's also a skill file for adding a menu to the layout editor.
+load("/path/to/layout_menu.il")
 
 Users of other software will have to write their own scripts to generate the
 input file. I'd be very happy to receive code for other software.
