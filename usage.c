@@ -2,11 +2,9 @@
 #include <string.h>
 #include <png.h>
 
-#include "gen_cross_section.h"
-
 void print_usage()
 {
-	printf("gen_cross_section  version %s\n", GEN_CROSS_SECTION_VERSION);
+	printf("gen_cross_section  version %s\n", VERSION);
 	printf("Copyright (C) 2006,2007 by Roger Light\nhttp://atchoo.org/tools/gen_cross_section/\n\n");
 	printf("gen_cross_section comes with ABSOLUTELY NO WARRANTY.  This is free software,\nand you are welcome to redistribute it under certain conditions.  See the GNU\nGeneral Public Licence for details.\n\n");
 	printf("gen_cross_section is a program for creating a PNG cross section of a chip\nlayout. It needs a text input file with format as described in format.txt.\n\n");

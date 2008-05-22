@@ -1,5 +1,5 @@
-gen_cross_section 20070827
-==========================
+gen_cross_section
+=================
 
 Introduction
 ------------

@@ -1,3 +1,12 @@
+20080522
+========
+
+- Fixed the RALGenCrossSection() internals so that the width argument isn't
+  treated as a string. Thanks to Eduardas Kiseliovas for noticing this.
+- Fixed the order of the arguments in RALGenCrossSection() to match the calls
+  in layout_menu.il. Thanks again to Eduardas Kiseliovas.
+- General cleanup of the Makefile.
+
 20070827
 ========
 

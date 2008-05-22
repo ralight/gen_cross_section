@@ -2,7 +2,9 @@ CC=gcc
 LIBS=-lpng12
 VERSION=20080522
 DISTDIR=gen_cross_section-${VERSION}
-CFLAGS="-Wall -ggdb -I/usr/include/libpng12 -DVERSION=\"${VERSION}\""
+CFLAGS=-Wall -ggdb -I/usr/include/libpng12 -DVERSION=\"${VERSION}\"
+
+prefix=/usr/local
  
 gen_cross_section: gen_cross_section.o usage.o palette.o image.o layers.o gen_png.o
 	$(CC) $(LIBS) $^ -o $@
@@ -26,7 +28,11 @@ gen_png.o: gen_png.c gen_png.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 install: gen_cross_section
-	install -s $@ /usr/local/bin
+	$(INSTALL) -d ${DESTDIR}${prefix}/bin/
+	$(INSTALL) -s gen_cross_section ${DESTDIR}${prefix}/bin/gen_cross_section
+
+uninstall:
+	rm -f ${DESTDIR}${prefix}/bin/gen_cross_section
 
 dist: gen_cross_section
 	rm -rf ${DISTDIR}/

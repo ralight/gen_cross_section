@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <png.h>
-#include "gen_cross_section.h"
+
 #include "usage.h"
 #include "gen_png.h"
 #include "layers.h"
