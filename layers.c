@@ -140,7 +140,7 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 	}
 
 	fgets(istr, 1024, inptr); /* Number of pixels across */
-	sscanf(istr, "%ld", width);
+	sscanf(istr, "%lu", (unsigned long *)width);
 	(*cross_section) = (char ***)calloc(*width, sizeof(char **));
 	if(!(*cross_section)){
 		fclose(inptr);

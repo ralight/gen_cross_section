@@ -83,7 +83,7 @@ int make_palette(char *palettefile, png_color **palette, int *num_palette)
 				}else if(got_red){
 					fprintf(stderr, "Warning: Duplicate Red definition on line %d of palette file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Red: %ld", &col);
+					sscanf(line, "Red: %lu", (unsigned long *)&col);
 					(*palette)[current_element].red = col;
 					got_red = 1;
 				}
@@ -96,7 +96,7 @@ int make_palette(char *palettefile, png_color **palette, int *num_palette)
 				}else if(got_green){
 					fprintf(stderr, "Warning: Duplicate Green definition on line %d of palette file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Green: %ld", &col);
+					sscanf(line, "Green: %lu", (unsigned long *)&col);
 					(*palette)[current_element].green = col;
 					got_green = 1;
 				}
@@ -109,7 +109,7 @@ int make_palette(char *palettefile, png_color **palette, int *num_palette)
 				}else if(got_blue){
 					fprintf(stderr, "Warning: Duplicate Blue definition on line %d of palette file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Blue: %ld", &col);
+					sscanf(line, "Blue: %lu", (unsigned long *)&col);
 					(*palette)[current_element].blue = col;
 					got_blue = 1;
 				}

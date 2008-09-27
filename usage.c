@@ -50,7 +50,7 @@ int process_args(int argc, char *argv[], char **infile, char **outfile, char **l
 					print_usage();
 					return 0;
 				}else{
-					sscanf(argv[i+1], "%ld", maxwidth);
+					sscanf(argv[i+1], "%lu", (unsigned long *)maxwidth);
 				}
 			}else if(strncmp(argv[i], "-o", strlen("-o"))==0){
 				if(i==argc-1){
