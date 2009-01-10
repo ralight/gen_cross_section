@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 	png_uint_32 imagewidth;
 	png_uint_32 maxwidth = 0;
 	layerdef *layers = NULL;
-	int num_layers = 0;
-	int i;
+	unsigned int num_layers = 0;
+	unsigned int i;
 
 	if(!process_args(argc, argv, &infile, &outfile, &layersfile, &palettefile, &maxwidth)){
 		return 1;

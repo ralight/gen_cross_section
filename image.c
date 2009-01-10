@@ -2,10 +2,10 @@
 #include "image.h"
 #include "layers.h"
 
-void make_image(png_byte **image, layerdef *layers, int num_layers, char ***cross_section, png_uint_32 imagewidth, png_uint_32 height, png_uint_32 pixelwidth)
+void make_image(png_byte **image, layerdef *layers, unsigned int num_layers, char ***cross_section, png_uint_32 imagewidth, png_uint_32 height, png_uint_32 pixelwidth)
 {
-	int i, j, k;
-	int cross_sectioncol, layercount;
+	unsigned int i, j, k;
+	unsigned int cross_sectioncol, layercount;
 
 	/* Clear image to background and init lastcolours */
 	for(i = 0; i < height; i++){

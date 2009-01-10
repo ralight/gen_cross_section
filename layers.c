@@ -23,12 +23,12 @@ int check_rule(layerdef *layer, char **cross_sectioncol)
 	 * left to right. We currently assume that the rules are valid so something
 	 * like "&& A ! || B" would throw us completely.
 	 */
-	int i;
+	unsigned int i;
 	char operator = '\0';
 	char last_operator = '\0';
-	int layer_cnt = 0;
-	int operator_cnt = 0, bin_operator_cnt = 0;
-	int layer_index = 0, operator_index = 0;
+	unsigned int layer_cnt = 0;
+	unsigned int operator_cnt = 0, bin_operator_cnt = 0;
+	unsigned int layer_index = 0, operator_index = 0;
 	int *results = NULL;
 	char *bin_operators = NULL;
 	int result;
@@ -113,7 +113,7 @@ int check_rule(layerdef *layer, char **cross_sectioncol)
 
 void free_cross_section(char ***cross_section, png_uint_32 width)
 {
-	int i, j;
+	unsigned int i, j;
 
 	for(i = 0; i < width; i++){
 		for(j = 0; j < MAX_CROSS_SECTIONS_PER_POINT; j++){
@@ -128,7 +128,7 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 {
 	FILE *inptr = NULL;
 	char istr[1024];
-	int i, j;
+	unsigned int i, j;
 
 	if(infile){
 		inptr = fopen(infile, "rt");
@@ -176,7 +176,7 @@ int load_cross_section(char *infile, char ****cross_section, png_uint_32 *width,
 	return 1;
 }
 
-int load_layers(char *layersfile, layerdef **layers, int *num_layers)
+int load_layers(char *layersfile, layerdef **layers, unsigned int *num_layers)
 {
 	FILE *layersptr = NULL;
 	int layerstart_cnt = 0;
@@ -315,10 +315,10 @@ int load_layers(char *layersfile, layerdef **layers, int *num_layers)
 	return 1;
 }
 
-int parse_rules(char *line, char ***rules, int *num_rules)
+int parse_rules(char *line, char ***rules, unsigned int *num_rules)
 {
-	int i;
-	int elements = 0;
+	unsigned int i;
+	unsigned int elements = 0;
 	int in_element = 0;
 	char *tok;
 
@@ -358,9 +358,9 @@ int parse_rules(char *line, char ***rules, int *num_rules)
 	return 1;
 }
 
-void free_layers(layerdef *layers, int num_layers)
+void free_layers(layerdef *layers, unsigned int num_layers)
 {
-	int i, j;
+	unsigned int i, j;
 
 	for(i = 0; i < num_layers; i++){
 		for(j = 0; j < layers[i].num_rules; j++){

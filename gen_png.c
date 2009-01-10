@@ -12,7 +12,7 @@ int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers,
 	png_color *palette = NULL;
 	int num_palette;
 // Removed because it doesn't work	png_text text[10];
-	int i;
+	unsigned int i;
 
 	if(outfile){
 		outptr = fopen(outfile, "wb");
