@@ -2,6 +2,8 @@
 #include <string.h>
 #include <png.h>
 
+#include "usage.h"
+
 void print_usage(void)
 {
 	printf("gen_cross_section  version %s\n", VERSION);
