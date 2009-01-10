@@ -14,7 +14,7 @@
 #
 # Name doesn't do anything at the moment, it is just for making our lives
 # easier.
-# YBottom and YTop control where that layer will be drawn.
+# YBottom and YTop control where that layer will be drawn and must be >=0.
 # Colour controls what colour is used - it is the index of the palette from
 # palette.txt.
 # Rule controls the conditions under which the layer will be drawn.
