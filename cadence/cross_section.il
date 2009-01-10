@@ -1,11 +1,15 @@
-/* Generate an input file for gen_cross_section
-   End users will want to customise RALGenCrossSection(), specifically the grid and image size.
+/*
+
+Generate an input file for gen_cross_section
+End users will want to customise RALGenCrossSection().
+
 */
+
 /*
 The functions XyzGetLppsAtPoint and XyzGetOvlpObj, which do most of the work 
 getting the layer information, were written by Jim Newton, part of the Cadence 
 VCAD team. As such, Jim has given me permission to distribute the code but
-that does mean it is not covered by the license in COPYING.txt.
+that does mean it is not covered by the license in COPYING.
 
 The original thread where Jim provided the functions can be seen at:
 
