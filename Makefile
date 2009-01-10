@@ -2,7 +2,7 @@ CC=gcc
 LIBS=-lpng12
 VERSION=20080522
 DISTDIR=gen_cross_section-${VERSION}
-CFLAGS=-Wall -ggdb -I/usr/include/libpng12 -DVERSION=\"${VERSION}\" -std=gnu99 -pedantic
+CFLAGS=-Wall -ggdb -I/usr/include/libpng12 -DVERSION=\"${VERSION}\" -std=gnu99 -pedantic -fno-common -Wall -Wdeclaration-after-statement -Wextra -Wformat=2 -Winit-self -Winline -Wpacked -Wp,-D_FORTIFY_SOURCE=2 -Wpointer-arith -Wlarger-than-65500 -Wmissing-declarations -Wmissing-format-attribute -Wmissing-noreturn -Wmissing-prototypes -Wnested-externs -Wold-style-definition -Wredundant-decls -Wsign-compare -Wstrict-aliasing=2 -Wstrict-prototypes -Wswitch-enum -Wundef -Wunreachable-code -Wwrite-strings
 
 prefix=/usr/local
  

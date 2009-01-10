@@ -2,7 +2,7 @@
 #include <string.h>
 #include <png.h>
 
-void print_usage()
+void print_usage(void)
 {
 	printf("gen_cross_section  version %s\n", VERSION);
 	printf("Copyright (C) 2006,2007 by Roger Light\nhttp://atchoo.org/tools/gen_cross_section/\n\n");
