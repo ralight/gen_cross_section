@@ -49,7 +49,7 @@ clean:
 	rm -f gen_cross_section
 	rm -f *.o
 
-test: ${OUT}
+test: gen_cross_section
 	./gen_cross_section -i example.txt -o example.png -l ./layers.txt -p ./palette.txt -m 800
 
 memtest: gen_cross_section
