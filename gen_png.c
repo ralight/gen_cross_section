@@ -33,6 +33,10 @@ int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers,
 	int num_palette;
 // Removed because it doesn't work	png_text text[10];
 	unsigned int i;
+	png_byte **image;
+	png_bytep row_pointers[height];
+	png_structp png_ptr;
+	png_infop info_ptr;
 
 	if(outfile){
 		outptr = fopen(outfile, "wb");
@@ -43,7 +47,7 @@ int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers,
 		outptr = stdout;
 	}
 
-	png_structp png_ptr = png_create_write_struct(
+	png_ptr = png_create_write_struct(
 					PNG_LIBPNG_VER_STRING,
 					NULL,
 					NULL,
@@ -55,7 +59,7 @@ int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers,
 		return 0;
 	}
 
-	png_infop info_ptr = png_create_info_struct(png_ptr);
+	info_ptr = png_create_info_struct(png_ptr);
 	if(!info_ptr){
 		png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
 		fclose(outptr);
@@ -105,8 +109,6 @@ int make_png(char *outfile, char *palettefile, layerdef *layers, int num_layers,
 	png_write_info(png_ptr, info_ptr);
 
 	/* Create image */
-	png_byte **image;
-	png_bytep row_pointers[height];
 
 	image = (png_byte **)calloc(height, sizeof(png_byte *));
 	for(i = 0; i < height; i++){
