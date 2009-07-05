@@ -127,6 +127,7 @@ int check_rule(layerdef *layer, char **cross_sectioncol)
 		}
 	}
 
+	free(bin_operators);
 	free(results);
 	return result;
 }
