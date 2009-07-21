@@ -1,0 +1,4 @@
+syntax: glob
+
+*.o
+gen_cross_section
