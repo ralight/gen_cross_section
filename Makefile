@@ -7,7 +7,7 @@ CFLAGS=-Wall -ggdb -I/usr/include/libpng12 -DVERSION=\"${VERSION}\" -std=gnu99 -
 prefix=/usr/local
  
 gen_cross_section: gen_cross_section.o usage.o palette.o image.o layers.o gen_png.o
-	$(CC) $(LIBS) $^ -o $@
+	$(CC) $^ -o $@ $(LIBS)
 
 gen_cross_section.o: gen_cross_section.c
 	$(CC) $(CFLAGS) -c $^ -o $@
