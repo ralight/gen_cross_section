@@ -1,8 +1,8 @@
 CC=gcc
-LIBS=-lpng12
+LIBS=-lpng16
 VERSION=20090110
 DISTDIR=gen_cross_section-${VERSION}
-CFLAGS=-Wall -ggdb -I/usr/include/libpng12 -DVERSION=\"${VERSION}\" -std=gnu99 -pedantic
+CFLAGS=-Wall -ggdb -I/usr/include/libpng16 -DVERSION=\"${VERSION}\" -std=gnu99 -pedantic
 
 prefix=/usr/local
  
